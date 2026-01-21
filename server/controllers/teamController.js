@@ -16,6 +16,14 @@ const createTeam = asyncHandler(async (req, res) => {
   });
 
   const createdTeam = await team.save();
+
+  // Update the user's teams array to include the newly created team using findByIdAndUpdate with $addToSet
+  await User.findByIdAndUpdate(
+    req.user._id,
+    { $addToSet: { teams: createdTeam._id } },
+    { new: true } // Return the updated document
+  );
+
   res.status(201).json(createdTeam);
 });
 
@@ -23,7 +31,13 @@ const createTeam = asyncHandler(async (req, res) => {
 // @route   GET /api/teams
 // @access  Private
 const getTeams = asyncHandler(async (req, res) => {
-  const teams = await Team.find({ members: req.user._id });
+  const teams = await Team.find({
+    $or: [{ owner: req.user._id }, { members: req.user._id }],
+  })
+    .populate('owner', 'name email')
+    .populate('members', 'name email')
+    .populate('pendingJoinRequests', 'name email');
+
   res.status(200).json(teams);
 });
 
@@ -169,8 +183,14 @@ const updateTeamJoinRequest = asyncHandler(async (req, res) => {
     const user = await User.findById(userId);
     if (user) {
       if (!user.teams.includes(teamId)) {
-        user.teams.push(teamId);
-        await user.save();
+        // Add team to user's teams list
+        // Use findByIdAndUpdate with $addToSet to ensure the teamId is added uniquely and saved
+        // Use findByIdAndUpdate with $addToSet to ensure the teamId is added uniquely and saved
+        await User.findByIdAndUpdate(
+          userId,
+          { $addToSet: { teams: teamId } },
+          { new: true } // Return the updated document
+        );
       }
     } else {
       console.warn(`Approved user (ID: ${userId}) not found for team ${teamId}.`);

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logout } from './userActions';
 import {
   TEAM_LIST_REQUEST,
   TEAM_LIST_SUCCESS,
@@ -30,7 +31,6 @@ export const listTeams = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    console.log('listTeams - userInfo.token:', userInfo.token);
     const { data } = await axios.get('/api/teams', config);
 
     dispatch({
@@ -38,12 +38,16 @@ export const listTeams = () => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: TEAM_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };

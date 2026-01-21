@@ -1,42 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../components/FormContainer';
 import { createProjectWithAI } from '../actions/projectActions';
 import { PROJECT_CREATE_WITH_AI_RESET } from '../constants/projectConstants';
 import { listTeams } from '../actions/teamActions';
-import { listTasks } from '../actions/taskActions';
-
+// Removed listTasks as per simplified input
+import Loader from '../components/Loader';
+import Message from '../components/Message'; // For error/success messages
+import { FaRobot } from 'react-icons/fa'; // Icon for AI
 
 const ProjectCreateScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [name, setName] = useState('');
-  const [goal, setGoal] = useState('');
+  const [aiPrompt, setAiPrompt] = useState(''); // Unified AI prompt input
   const [dueDate, setDueDate] = useState('');
-  const [team, setTeam] = useState('');
-  const [newProjectName, setNewProjectName] = useState('');
-  const [newProjectGoal, setNewProjectGoal] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState(''); // Renamed for clarity
 
   const teamList = useSelector((state) => state.teamList);
   const { teams = [] } = teamList;
 
-  const taskList = useSelector((state) => state.taskList);
-  const { tasks = [] } = taskList;
+  // Removed taskList for simplicity of input, will re-evaluate if needed for suggestions
 
   const projectCreateWithAI = useSelector((state) => state.projectCreateWithAI);
   const { loading, error, success, project } = projectCreateWithAI;
 
-  const userInfo = useSelector((state) => state.userLogin.userInfo); // Explicitly bring userInfo into scope here for useEffect
+  const userInfo = useSelector((state) => state.userLogin.userInfo);
 
   useEffect(() => {
-    if (!userInfo || !userInfo.token) {
+    if (!userInfo || !userInfo.token || userInfo.token.trim() === '') {
       navigate('/login');
     } else {
       dispatch(listTeams());
-      dispatch(listTasks());
+      // No dispatch(listTasks()) needed for simplified input
     }
     if (success) {
       dispatch({ type: PROJECT_CREATE_WITH_AI_RESET });
@@ -46,112 +42,103 @@ const ProjectCreateScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const finalName = name === 'CREATE_NEW' ? newProjectName : name;
-    const finalGoal = goal === 'CREATE_NEW' ? newProjectGoal : goal;
-
-    dispatch(createProjectWithAI({ name: finalName, goal: finalGoal, dueDate, teamId: team }));
+    if (!aiPrompt.trim()) {
+      // Handle client-side validation, perhaps using Message component
+      // For now, let's assume a message will be displayed by the global Message component if there's an error state
+      return;
+    }
+    // For now, hardcode project name as 'AI Generated Project'. Can refine if AI returns name.
+    dispatch(createProjectWithAI({ name: 'AI Generated Project', goal: aiPrompt, dueDate, teamId: selectedTeam }));
   };
 
   return (
-    <>
-      <Link to="/" className="btn btn-light my-3">
+    <div className="create-project-ai-page">
+      <Link to="/projects/ongoing" className="btn btn-secondary btn-small back-button">
         Go Back
       </Link>
-      <FormContainer>
-        <h1>Create Project with AI</h1>
-        {loading && <h3>Loading...</h3>}
-        {error && <h3>{error}</h3>}
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId="name">
-            <Form.Label>Project Name</Form.Label>
-            <Form.Control
-              as="select"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            >
-              <option value="">Select or Create New Project Name</option>
-              <option value="CREATE_NEW">Create New Project Name</option>
-              {tasks && tasks.map((taskOption) => (
-                <option key={taskOption._id} value={taskOption.name}>
-                  {taskOption.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+      <div className="hero-input-section">
+        <FaRobot className="ai-icon" />
+        <h1 className="hero-title">What do you want to build?</h1>
+        <div className="hero-input-container">
+          <textarea
+            className="form-input hero-textarea"
+            placeholder="Describe your project goal, e.g., 'Develop an e-commerce platform for selling custom artwork with user authentication, product listings, and a secure payment gateway.'"
+            value={aiPrompt}
+            onChange={(e) => setAiPrompt(e.target.value)}
+            rows={5}
+          ></textarea>
+          <div className="project-options">
+             <div className="form-group floating-label"> {/* Reusing floating-label class */}
+                <input
+                    type="date"
+                    id="dueDate"
+                    placeholder=" "
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="form-input"
+                />
+                <label htmlFor="dueDate">Due Date</label>
+            </div>
+            <div className="form-group floating-label">
+                <select
+                    id="selectedTeam"
+                    value={selectedTeam}
+                    onChange={(e) => setSelectedTeam(e.target.value)}
+                    className="form-input"
+                >
+                    <option value="">Select Team</option>
+                    {teams.map((teamOption) => (
+                        <option key={teamOption._id} value={teamOption._id}>
+                            {teamOption.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor="selectedTeam">Assign Team (Optional)</label>
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary btn-full-width hero-button"
+            onClick={submitHandler}
+            disabled={loading}
+          >
+            {loading ? 'Generating...' : 'Generate Project'}
+          </button>
+        </div>
+      </div>
 
-          {name === 'CREATE_NEW' && (
-            <Form.Group controlId="newProjectName">
-              <Form.Label>New Project Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter new project name"
-                value={newProjectName}
-                onChange={(e) => setNewProjectName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-          )}
+      {error && <Message variant='danger'>{error}</Message>}
 
-          <Form.Group controlId="goal">
-            <Form.Label>Project Goal</Form.Label>
-            <Form.Control
-              as="select"
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
-            >
-              <option value="">Select or Create New Project Goal</option>
-              <option value="CREATE_NEW">Create New Project Goal</option>
-              {tasks && tasks.map((taskOption) => (
-                <option key={taskOption._id} value={taskOption.description}>
-                  {taskOption.description}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+      {loading && (
+        <div className="ai-loading-animation">
+            {/* Shimmering Skeleton Loader Placeholder */}
+            <div className="skeleton-loader"></div>
+            <div className="skeleton-loader small"></div>
+            <div className="skeleton-loader medium"></div>
+            <div className="skeleton-loader"></div>
+            <p className="ai-thinking-text">AI is thinking...</p>
+        </div>
+      )}
 
-          {goal === 'CREATE_NEW' && (
-            <Form.Group controlId="newProjectGoal">
-              <Form.Label>New Project Goal</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Describe new project goal"
-                value={newProjectGoal}
-                onChange={(e) => setNewProjectGoal(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-          )}
-
-          <Form.Group controlId="dueDate">
-            <Form.Label>Due Date</Form.Label>
-            <Form.Control
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId="team">
-            <Form.Label>Assign Team (Optional)</Form.Label>
-            <Form.Control
-              as="select"
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
-            >
-              <option value="">Select Team</option>
-              {teams && teams.map((teamOption) => (
-                <option key={teamOption._id} value={teamOption._id}>
-                  {teamOption.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-
-          <Button type="submit" variant="primary" className="mt-3">
-            Generate Project
-          </Button>
-        </Form>
-      </FormContainer>
-    </>
+      {success && project && project.tasks && (
+        <div className="ai-result-preview">
+          <h2 className="preview-title">Generated Project Roadmap:</h2>
+          {/* Simple list view for now, will enhance with timeline/tree view CSS */}
+          <ul className="tasks-preview-list">
+            {project.tasks.map(task => (
+              <li key={task._id} className="task-preview-item">
+                <span className="task-name">{task.name}</span>
+                {task.duration && <span className="task-duration">({task.duration} days)</span>}
+              </li>
+            ))}
+          </ul>
+          {/* Add a button to navigate to the new project */}
+          <Link to={`/project/${project._id}`} className="btn btn-primary btn-full-width mt-3">
+            View New Project
+          </Link>
+        </div>
+      )}
+    </div>
   );
 };
 

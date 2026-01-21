@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logout } from './userActions';
 import {
   TASK_LIST_REQUEST,
   TASK_LIST_SUCCESS,
@@ -30,7 +31,6 @@ export const listTasks = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    console.log('listTasks - userInfo.token:', userInfo.token);
     const { data } = await axios.get('/api/tasks', config);
 
     dispatch({
@@ -38,12 +38,16 @@ export const listTasks = () => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: TASK_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import useLocation and useNavigate
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../actions/userActions';
-import FormContainer from '../components/FormContainer';
+// import FormContainer from '../components/FormContainer'; // Removed
+import AuthLayout from '../components/AuthLayout'; // New import
 
 const RegisterScreen = () => { // Remove location and history props
   const [name, setName] = useState('');
@@ -36,57 +37,67 @@ const RegisterScreen = () => { // Remove location and history props
   };
 
   return (
-    <FormContainer>
-      <h1>Sign Up</h1>
-      {message && <h3>{message}</h3>}
-      {error && <h3>{error}</h3>}
-      {loading && <h3>Loading...</h3>}
-      <form onSubmit={submitHandler}>
-        <div>
-          <label>Name</label>
-          <input
-            type="name"
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></input>
+    <AuthLayout>
+      <div className="auth-form-content">
+        <h1 className="auth-title">Sign Up</h1>
+        {message && <h3 className="auth-error-message">{message}</h3>}
+        {error && <h3 className="auth-error-message">{error}</h3>}
+        {loading && <h3 className="auth-loading-message">Loading...</h3>}
+        <form onSubmit={submitHandler} className="auth-form">
+          <div className="form-group floating-label">
+            <input
+              type="text" // Changed from 'name' to 'text' as 'name' is not a standard HTML type for text input
+              id="name"
+              placeholder=" "
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="form-input"
+            />
+            <label htmlFor="name">Name</label>
+          </div>
+          <div className="form-group floating-label">
+            <input
+              type="email"
+              id="email"
+              placeholder=" "
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+            />
+            <label htmlFor="email">Email Address</label>
+          </div>
+          <div className="form-group floating-label">
+            <input
+              type="password"
+              id="password"
+              placeholder=" "
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+            />
+            <label htmlFor="password">Password</label>
+          </div>
+          <div className="form-group floating-label">
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder=" "
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="form-input"
+            />
+            <label htmlFor="confirmPassword">Confirm Password</label>
+          </div>
+          <button type="submit" className="btn btn-primary btn-full-width">Register</button>
+        </form>
+        <div className="auth-link-container">
+          Have an Account?{' '}
+          <Link to={redirect ? `/login?redirect=${redirect}` : '/login'} className="auth-link">
+            Login
+          </Link>
         </div>
-        <div>
-          <label>Email Address</label>
-          <input
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          ></input>
-        </div>
-        <button type="submit">Register</button>
-      </form>
-      <div>
-        Have an Account?{' '}
-        <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
-          Login
-        </Link>
       </div>
-    </FormContainer>
+    </AuthLayout>
   );
 };
 

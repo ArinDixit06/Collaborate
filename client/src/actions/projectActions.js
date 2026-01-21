@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logout } from './userActions';
 import {
   PROJECT_CREATE_WITH_AI_REQUEST,
   PROJECT_CREATE_WITH_AI_SUCCESS,
@@ -38,12 +39,16 @@ export const createProjectWithAI = (project) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: PROJECT_CREATE_WITH_AI_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -69,7 +74,16 @@ export const getProjectDetails = (id) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
+      type: PROJECT_DETAILS_FAIL,
+      payload: message,
     });
   }
 };
@@ -97,12 +111,16 @@ export const listProjects = () => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: PROJECT_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -129,12 +147,16 @@ export const deleteProject = (id) => async (dispatch, getState) => {
       type: PROJECT_DELETE_SUCCESS,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: PROJECT_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };

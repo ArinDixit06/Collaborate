@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
-import Header from './components/Header';
+// import { Container } from 'react-bootstrap'; // Removed
+// import Header from './components/Header'; // Removed
+import Sidebar from './components/Sidebar'; // New import
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import TeamScreen from './screens/TeamScreen';
@@ -17,9 +18,9 @@ import OngoingProjectsScreen from './screens/OngoingProjectsScreen';
 const App = () => {
   return (
     <Router>
-      <Header />
-      <main className="py-3">
-        <Container>
+      <div className="app-layout">
+        <Sidebar />
+        <div className="main-content">
           <Routes>
             <Route path="/" element={<HomeScreen />} exact />
             <Route path="/login" element={<LoginScreen />} />
@@ -33,8 +34,8 @@ const App = () => {
             <Route path="/projects/ongoing" element={<OngoingProjectsScreen />} />
             {/* Add other routes here */}
           </Routes>
-        </Container>
-      </main>
+        </div>
+      </div>
     </Router>
   );
 };

@@ -19,9 +19,17 @@ const getProjects = asyncHandler(async (req, res) => {
     $or: [{ owner: req.user._id }, { team: { $in: req.user.teams } }],
   })
     .populate('owner', 'name email')
-    .populate('team', 'name')
-    .populate({
+    .populate({ // Populate team with its members' names and emails
+      path: 'team',
+      select: 'name members', // Select team name and members
+      populate: {
+        path: 'members',
+        select: 'name email', // Select member name and email
+      },
+    })
+    .populate({ // Populate tasks with status and assignee details
       path: 'tasks',
+      select: 'status', // Include status for progress calculation
       populate: {
         path: 'assignee',
         select: 'name email',
@@ -123,13 +131,21 @@ const getProjectById = asyncHandler(async (req, res) => {
     const project = await Project.findById(req.params.id)
         .populate({
             path: 'tasks',
+            select: 'name status duration priority assignee', // Explicitly select required fields
             populate: {
                 path: 'assignee',
                 select: 'name email',
             },
         })
         .populate('owner', 'name email')
-        .populate('team', 'name');
+        .populate({ // Populate team with its members' names and emails
+            path: 'team',
+            select: 'name members', // Select team name and members
+            populate: {
+                path: 'members',
+                select: 'name email', // Select member name and email
+            },
+        });
 
     if (project) {
         res.json(project);
