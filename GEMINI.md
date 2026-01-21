@@ -1,0 +1,199 @@
+GET http://localhost:5173/api/teams 401 (Unauthorized)
+dispatchXhrRequest @ axios.js?v=5b13a88e:1696
+xhr @ axios.js?v=5b13a88e:1573
+dispatchRequest @ axios.js?v=5b13a88e:2107
+_request @ axios.js?v=5b13a88e:2327
+request @ axios.js?v=5b13a88e:2219
+Axios.<computed> @ axios.js?v=5b13a88e:2346
+wrap @ axios.js?v=5b13a88e:8
+(anonymous) @ teamActions.js:28
+(anonymous) @ redux-thunk.js?v=5b13a88e:7
+(anonymous) @ ProjectCreateScreen.jsx:33
+react_stack_bottom_frame @ react-dom_client.js?v=5b13a88e:18567
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+commitHookEffectListMount @ react-dom_client.js?v=5b13a88e:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=5b13a88e:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11066
+flushPassiveEffects @ react-dom_client.js?v=5b13a88e:13150
+(anonymous) @ react-dom_client.js?v=5b13a88e:12776
+performWorkUntilDeadline @ react-dom_client.js?v=5b13a88e:36
+<ProjectCreateScreen>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=5b13a88e:247
+App @ App.jsx:31
+react_stack_bottom_frame @ react-dom_client.js?v=5b13a88e:18509
+renderWithHooksAgain @ react-dom_client.js?v=5b13a88e:5729
+renderWithHooks @ react-dom_client.js?v=5b13a88e:5665
+updateFunctionComponent @ react-dom_client.js?v=5b13a88e:7475
+beginWork @ react-dom_client.js?v=5b13a88e:8525
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+performUnitOfWork @ react-dom_client.js?v=5b13a88e:12561
+workLoopSync @ react-dom_client.js?v=5b13a88e:12424
+renderRootSync @ react-dom_client.js?v=5b13a88e:12408
+performWorkOnRoot @ react-dom_client.js?v=5b13a88e:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=5b13a88e:13505
+performWorkUntilDeadline @ react-dom_client.js?v=5b13a88e:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=5b13a88e:247
+(anonymous) @ main.jsx:12
+taskActions.js:31 
+            
+            
+           GET http://localhost:5173/api/tasks 401 (Unauthorized)
+dispatchXhrRequest @ axios.js?v=5b13a88e:1696
+xhr @ axios.js?v=5b13a88e:1573
+dispatchRequest @ axios.js?v=5b13a88e:2107
+_request @ axios.js?v=5b13a88e:2327
+request @ axios.js?v=5b13a88e:2219
+Axios.<computed> @ axios.js?v=5b13a88e:2346
+wrap @ axios.js?v=5b13a88e:8
+(anonymous) @ taskActions.js:31
+(anonymous) @ redux-thunk.js?v=5b13a88e:7
+(anonymous) @ ProjectCreateScreen.jsx:34
+react_stack_bottom_frame @ react-dom_client.js?v=5b13a88e:18567
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+commitHookEffectListMount @ react-dom_client.js?v=5b13a88e:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=5b13a88e:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=5b13a88e:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=5b13a88e:11066
+flushPassiveEffects @ react-dom_client.js?v=5b13a88e:13150
+(anonymous) @ react-dom_client.js?v=5b13a88e:12776
+performWorkUntilDeadline @ react-dom_client.js?v=5b13a88e:36
+<ProjectCreateScreen>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=5b13a88e:247
+App @ App.jsx:31
+react_stack_bottom_frame @ react-dom_client.js?v=5b13a88e:18509
+renderWithHooksAgain @ react-dom_client.js?v=5b13a88e:5729
+renderWithHooks @ react-dom_client.js?v=5b13a88e:5665
+updateFunctionComponent @ react-dom_client.js?v=5b13a88e:7475
+beginWork @ react-dom_client.js?v=5b13a88e:8525
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+performUnitOfWork @ react-dom_client.js?v=5b13a88e:12561
+workLoopSync @ react-dom_client.js?v=5b13a88e:12424
+renderRootSync @ react-dom_client.js?v=5b13a88e:12408
+performWorkOnRoot @ react-dom_client.js?v=5b13a88e:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=5b13a88e:13505
+performWorkUntilDeadline @ react-dom_client.js?v=5b13a88e:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=5b13a88e:247
+(anonymous) @ main.jsx:12
+teamActions.js:28 
+            
+            
+           GET http://localhost:5173/api/teams 401 (Unauthorized)
+dispatchXhrRequest @ axios.js?v=5b13a88e:1696
+xhr @ axios.js?v=5b13a88e:1573
+dispatchRequest @ axios.js?v=5b13a88e:2107
+_request @ axios.js?v=5b13a88e:2327
+request @ axios.js?v=5b13a88e:2219
+Axios.<computed> @ axios.js?v=5b13a88e:2346
+wrap @ axios.js?v=5b13a88e:8
+(anonymous) @ teamActions.js:28
+(anonymous) @ redux-thunk.js?v=5b13a88e:7
+(anonymous) @ ProjectCreateScreen.jsx:33
+react_stack_bottom_frame @ react-dom_client.js?v=5b13a88e:18567
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+commitHookEffectListMount @ react-dom_client.js?v=5b13a88e:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=5b13a88e:9465
+reconnectPassiveEffects @ react-dom_client.js?v=5b13a88e:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=5b13a88e:13339
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=5b13a88e:13347
+flushPassiveEffects @ react-dom_client.js?v=5b13a88e:13157
+(anonymous) @ react-dom_client.js?v=5b13a88e:12776
+performWorkUntilDeadline @ react-dom_client.js?v=5b13a88e:36
+<ProjectCreateScreen>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=5b13a88e:247
+App @ App.jsx:31
+react_stack_bottom_frame @ react-dom_client.js?v=5b13a88e:18509
+renderWithHooksAgain @ react-dom_client.js?v=5b13a88e:5729
+renderWithHooks @ react-dom_client.js?v=5b13a88e:5665
+updateFunctionComponent @ react-dom_client.js?v=5b13a88e:7475
+beginWork @ react-dom_client.js?v=5b13a88e:8525
+runWithFiberInDEV @ react-dom_client.js?v=5b13a88e:997
+performUnitOfWork @ react-dom_client.js?v=5b13a88e:12561
+workLoopSync @ react-dom_client.js?v=5b13a88e:12424
+renderRootSync @ react-dom_client.js?v=5b13a88e:12408
+performWorkOnRoot @ react-dom_client.js?v=5b13a88e:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=5b13a88e:13505
+performWorkUntilDeadline @ react-dom_client.js?v=5b13a88e:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=5b13a88e:247
+(anonymous) @ main.jsx:12
+taskActions.js:31 
+            
+            
+           GET http://localhost:5173/api/tasks 401 (Unauthorized)

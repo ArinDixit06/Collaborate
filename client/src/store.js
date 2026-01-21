@@ -1,0 +1,61 @@
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { thunk } from 'redux-thunk'; // Use named import
+import { composeWithDevTools } from '@redux-devtools/extension';
+import {
+  userLoginReducer,
+  userRegisterReducer,
+  userListReducer,
+} from './reducers/userReducers';
+import {
+  teamListReducer,
+  teamCreateReducer,
+  teamJoinReducer,
+  teamDeleteReducer,
+  teamUpdateJoinRequestReducer,
+} from './reducers/teamReducers';
+import {
+  taskListReducer,
+  taskCreateReducer,
+  taskUpdateReducer,
+  taskDetailsReducer,
+  taskDeleteReducer,
+} from './reducers/taskReducers';
+import { projectCreateWithAIReducer, projectDetailsReducer, projectListReducer, projectDeleteReducer } from './reducers/projectReducers';
+
+const reducer = combineReducers({
+  userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
+  userList: userListReducer,
+  teamList: teamListReducer,
+  teamCreate: teamCreateReducer,
+  teamJoin: teamJoinReducer,
+  teamDelete: teamDeleteReducer,
+  teamUpdateJoinRequest: teamUpdateJoinRequestReducer,
+  taskList: taskListReducer,
+  taskCreate: taskCreateReducer,
+  taskUpdate: taskUpdateReducer,
+  taskDetails: taskDetailsReducer,
+  taskDelete: taskDeleteReducer,
+  projectCreateWithAI: projectCreateWithAIReducer,
+  projectDetails: projectDetailsReducer,
+  projectList: projectListReducer,
+  projectDelete: projectDeleteReducer,
+});
+
+const userInfoFromStorage = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null;
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+};
+
+const middleware = [thunk]; // Use the named import 'thunk'
+
+const store = createStore(
+  reducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
+);
+
+export default store;

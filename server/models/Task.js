@@ -1,0 +1,55 @@
+const mongoose = require('mongoose');
+
+const taskSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
+    duration: {
+      type: Number, // in days
+      required: true,
+    },
+    dependencies: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task',
+      },
+    ],
+    assignee: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    status: {
+      type: String,
+      required: true,
+      default: 'pending', // pending, in_progress, completed, at_risk
+    },
+    commitmentTimestamp: {
+      type: Date,
+    },
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+    },
+    project: {
+        type: String, // Can be 'team' or 'solo'
+        required: true,
+        default: 'team',
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;
