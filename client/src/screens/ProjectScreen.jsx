@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getProjectDetails } from '../actions/projectActions';
+import { getProjectDetails, updateProject } from '../actions/projectActions';
 import { updateTask } from '../actions/taskActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -14,6 +11,76 @@ const calculateProgress = (tasks) => {
   return Math.round((completedTasks / tasks.length) * 100);
 };
 
+const TaskItem = ({ task, onCheck, onEdit, level = 0 }) => {
+  const [subtasksVisible, setSubtasksVisible] = useState(false);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Completed': return 'var(--status-success)';
+      case 'In Progress': return 'var(--status-info)';
+      case 'Blocked': return 'var(--status-error)';
+      case 'To Do': return 'var(--text-medium-emphasis)';
+      default: return 'var(--text-medium-emphasis)';
+    }
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'High': return 'var(--status-error)';
+      case 'Medium': return 'var(--status-warning)';
+      case 'Low': return 'var(--status-success)';
+      case 'Urgent': return 'var(--status-error)';
+      default: return 'var(--text-medium-emphasis)';
+    }
+  };
+
+  return (
+    <>
+      <li className="task-list-item" style={{ marginLeft: `${level * 20}px` }}>
+        <button className="btn-icon task-checkbox" onClick={() => onCheck(task)}>
+          {task.status === 'Completed' ? <FaCheckSquare /> : <FaSquare />}
+        </button>
+        <div className="task-details">
+          <span className={`task-name ${task.status === 'Completed' ? 'completed' : ''}`} onClick={() => onEdit(task._id)}>
+            {task.name}
+          </span>
+          <p className="task-description">{task.description}</p>
+        </div>
+        <div className="task-tags">
+          {task.priority && (
+            <span className="task-tag" style={{ backgroundColor: getPriorityColor(task.priority) }}>
+              {task.priority}
+            </span>
+          )}
+          {task.assignee && task.assignee.name && (
+            <span className="task-tag assignee-tag">
+              {task.assignee.name}
+            </span>
+          )}
+          <span className={`task-status-pill status-${task.status.toLowerCase().replace(/\s/g, '')}`}>
+            {task.status}
+          </span>
+        </div>
+        {task.subTasks && task.subTasks.length > 0 && (
+          <button className="btn-icon" onClick={() => setSubtasksVisible(!subtasksVisible)}>
+            {subtasksVisible ? '-' : '+'}
+          </button>
+        )}
+        <button className="btn-icon task-edit-button" onClick={() => onEdit(task._id)}>
+          <FaEdit />
+        </button>
+      </li>
+      {subtasksVisible && task.subTasks && (
+        <ul className="modern-task-list">
+          {task.subTasks.map(subtask => (
+            <TaskItem key={subtask._id} task={subtask} onCheck={onCheck} onEdit={onEdit} level={level + 1} />
+          ))}
+        </ul>
+      )}
+    </>
+  );
+};
+
 const ProjectScreen = () => {
   const { id: projectId } = useParams();
   const dispatch = useDispatch();
@@ -22,6 +89,8 @@ const ProjectScreen = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [isCreatingTask, setIsCreatingTask] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [projectName, setProjectName] = useState('');
 
   const projectDetails = useSelector((state) => state.projectDetails);
   const { loading, error, project } = projectDetails;
@@ -32,13 +101,25 @@ const ProjectScreen = () => {
   const taskUpdate = useSelector((state) => state.taskUpdate);
   const { success: successUpdate } = taskUpdate;
 
+  const projectUpdate = useSelector((state) => state.projectUpdate);
+  const { success: successProjectUpdate } = projectUpdate;
+
   useEffect(() => {
     if (!userInfo || !userInfo.token || userInfo.token.trim() === '') {
       navigate('/login');
     } else {
       dispatch(getProjectDetails(projectId));
+      if (successProjectUpdate) {
+        setIsEditing(false);
+      }
     }
-  }, [dispatch, projectId, userInfo, navigate, successUpdate]);
+  }, [dispatch, projectId, userInfo, navigate, successUpdate, successProjectUpdate]);
+
+  useEffect(() => {
+    if (project) {
+      setProjectName(project.name);
+    }
+  }, [project]);
 
   const handleTaskCheck = (task) => {
     const newStatus = task.status === 'Completed' ? 'To Do' : 'Completed';
@@ -64,24 +145,12 @@ const ProjectScreen = () => {
     dispatch(getProjectDetails(projectId));
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Completed': return 'var(--status-success)';
-      case 'In Progress': return 'var(--status-info)';
-      case 'Blocked': return 'var(--status-error)';
-      case 'To Do': return 'var(--text-medium-emphasis)';
-      default: return 'var(--text-medium-emphasis)';
-    }
+  const handleProjectNameChange = (e) => {
+    setProjectName(e.target.value);
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'High': return 'var(--status-error)';
-      case 'Medium': return 'var(--status-warning)';
-      case 'Low': return 'var(--status-success)';
-      case 'Urgent': return 'var(--status-error)';
-      default: return 'var(--text-medium-emphasis)';
-    }
+  const handleSaveProjectName = () => {
+    dispatch(updateProject({ _id: projectId, name: projectName }));
   };
 
   const progress = project ? calculateProgress(project.tasks) : 0;
@@ -101,7 +170,24 @@ const ProjectScreen = () => {
           <>
             <div className="project-hero-header">
               <div className="project-hero-title-and-action">
-                <h1 className="project-detail-title">{project.name}</h1>
+                {isEditing ? (
+                  <div className="edit-project-name">
+                    <input
+                      type="text"
+                      value={projectName}
+                      onChange={handleProjectNameChange}
+                    />
+                    <button onClick={handleSaveProjectName}>Save</button>
+                    <button onClick={() => setIsEditing(false)}>Cancel</button>
+                  </div>
+                ) : (
+                  <>
+                    <h1 className="project-detail-title">{project.name}</h1>
+                    <button onClick={() => setIsEditing(true)}>
+                      <FaEdit />
+                    </button>
+                  </>
+                )}
                 <button className="btn btn-primary btn-small add-task-btn" onClick={handleAddTask}>
                   <FaPlus /> Add Task
                 </button>
@@ -143,32 +229,7 @@ const ProjectScreen = () => {
             ) : (
               <ul className="modern-task-list">
                 {project.tasks && project.tasks.map((task) => (
-                  <li key={task._id} className="task-list-item">
-                    <button className="btn-icon task-checkbox" onClick={() => handleTaskCheck(task)}>
-                      {task.status === 'Completed' ? <FaCheckSquare /> : <FaSquare />}
-                    </button>
-                    <span className={`task-name ${task.status === 'Completed' ? 'completed' : ''}`} onClick={() => handleEditTask(task._id)}>
-                      {task.name}
-                    </span>
-                    <div className="task-tags">
-                      {task.priority && (
-                        <span className="task-tag" style={{ backgroundColor: getPriorityColor(task.priority) }}>
-                          {task.priority}
-                        </span>
-                      )}
-                      {task.assignee && task.assignee.name && (
-                        <span className="task-tag assignee-tag">
-                          {task.assignee.name}
-                        </span>
-                      )}
-                      <span className={`task-status-pill status-${task.status.toLowerCase().replace(/\s/g, '')}`}>
-                        {task.status}
-                      </span>
-                    </div>
-                    <button className="btn-icon task-edit-button" onClick={() => handleEditTask(task._id)}>
-                      <FaEdit />
-                    </button>
-                  </li>
+                  <TaskItem key={task._id} task={task} onCheck={handleTaskCheck} onEdit={handleEditTask} />
                 ))}
               </ul>
             )}

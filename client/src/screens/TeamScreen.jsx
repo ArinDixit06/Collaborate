@@ -10,15 +10,19 @@ import { listTeams, createTeam, joinTeam, deleteTeam, updateTeamJoinRequest } fr
 import { TEAM_CREATE_RESET, TEAM_JOIN_RESET, TEAM_DELETE_SUCCESS } from '../constants/teamConstants';
 
 // --- New TeamCard Component ---
-const TeamCard = ({ team, userInfo, onDelete }) => {
+const TeamCard = ({ team, userInfo, onDelete, navigate }) => {
   // Ensure team.owner and team.members are populated objects
   const isOwner = userInfo && team.owner && team.owner._id === userInfo._id;
 
   // Render nothing if essential data is missing
   if (!team || !team.owner || !team.members) return null;
 
+  const handleCardClick = () => {
+    navigate(`/team/${team._id}`);
+  };
+
   return (
-    <div className="team-card">
+    <div className="team-card" onClick={handleCardClick}>
       <div className="team-card-header">
         <h3 className="team-name">{team.name}</h3>
         <div className="team-owner-avatar" title={`Owner: ${team.owner.name}`}>
@@ -35,10 +39,10 @@ const TeamCard = ({ team, userInfo, onDelete }) => {
       <div className="team-card-actions">
         {isOwner && (
           <>
-            <button className="btn btn-icon btn-small" onClick={() => {/* navigate to edit team */}}>
+            <button className="btn btn-icon btn-small" onClick={(e) => { e.stopPropagation(); /* navigate to edit team */ }}>
               <FaEdit />
             </button>
-            <button className="btn btn-icon btn-small btn-danger" onClick={() => onDelete(team._id)}>
+            <button className="btn btn-icon btn-small btn-danger" onClick={(e) => { e.stopPropagation(); onDelete(team._id); }}>
               <FaTrash />
             </button>
           </>
@@ -225,6 +229,7 @@ const TeamScreen = () => {
                 team={team}
                 userInfo={userInfo}
                 onDelete={deleteHandler}
+                navigate={navigate}
               />
             ))
           )}

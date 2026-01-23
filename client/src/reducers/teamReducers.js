@@ -16,6 +16,9 @@ import {
   TEAM_UPDATE_JOIN_REQUEST_REQUEST,
   TEAM_UPDATE_JOIN_REQUEST_SUCCESS,
   TEAM_UPDATE_JOIN_REQUEST_FAIL,
+  TEAM_DETAILS_REQUEST,
+  TEAM_DETAILS_SUCCESS,
+  TEAM_DETAILS_FAIL,
 } from '../constants/teamConstants';
 
 export const teamListReducer = (state = { teams: [] }, action) => {
@@ -25,6 +28,22 @@ export const teamListReducer = (state = { teams: [] }, action) => {
     case TEAM_LIST_SUCCESS:
       return { loading: false, teams: action.payload };
     case TEAM_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const teamDetailsReducer = (
+  state = { team: { members: [], projects: [] } },
+  action
+) => {
+  switch (action.type) {
+    case TEAM_DETAILS_REQUEST:
+      return { ...state, loading: true };
+    case TEAM_DETAILS_SUCCESS:
+      return { loading: false, team: action.payload };
+    case TEAM_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

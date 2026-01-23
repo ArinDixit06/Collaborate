@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom'; // Import Link
-import { FaTrash, FaUsers } from 'react-icons/fa'; // Import icons
+import { FaTrash, FaUsers, FaPlus } from 'react-icons/fa'; // Import icons
 
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listProjects, deleteProject } from '../actions/projectActions';
 import { PROJECT_DELETE_SUCCESS } from '../constants/projectConstants';
+import ProjectCreateModal from '../components/ProjectCreateModal';
 
 // Helper to calculate progress (simple example)
 const calculateProgress = (tasks) => {
@@ -83,6 +84,8 @@ const OngoingProjectsScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -91,6 +94,9 @@ const OngoingProjectsScreen = () => {
 
   const projectDelete = useSelector(state => state.projectDelete);
   const { loading: loadingDelete, error: errorDelete, success: successDelete } = projectDelete;
+
+  const projectCreate = useSelector(state => state.projectCreate);
+  const { success: successCreate } = projectCreate;
 
   useEffect(() => {
     if (!userInfo || !userInfo.token || userInfo.token.trim() === '') {
@@ -103,7 +109,7 @@ const OngoingProjectsScreen = () => {
         dispatch(listProjects());
       }
     }
-  }, [dispatch, navigate, userInfo, successDelete]);
+  }, [dispatch, navigate, userInfo, successDelete, successCreate]);
 
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
@@ -111,9 +117,17 @@ const OngoingProjectsScreen = () => {
     }
   };
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="ongoing-projects-page">
-      <h1 className="dashboard-title">Ongoing Projects</h1> {/* Reusing dashboard-title class */}
+      <div className="project-header">
+        <h1 className="dashboard-title">Ongoing Projects</h1>
+        <button className="btn btn-primary" onClick={openModal}>
+          <FaPlus /> Create Project
+        </button>
+      </div>
 
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
@@ -137,6 +151,7 @@ const OngoingProjectsScreen = () => {
           )}
         </div>
       )}
+      <ProjectCreateModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 };

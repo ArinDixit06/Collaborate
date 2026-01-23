@@ -16,6 +16,9 @@ import {
   TEAM_UPDATE_JOIN_REQUEST_REQUEST,
   TEAM_UPDATE_JOIN_REQUEST_SUCCESS,
   TEAM_UPDATE_JOIN_REQUEST_FAIL,
+  TEAM_DETAILS_REQUEST,
+  TEAM_DETAILS_SUCCESS,
+  TEAM_DETAILS_FAIL,
 } from '../constants/teamConstants';
 
 export const listTeams = () => async (dispatch, getState) => {
@@ -52,11 +55,46 @@ export const listTeams = () => async (dispatch, getState) => {
   }
 };
 
+export const getTeamDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: TEAM_DETAILS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/teams/${id}`, config);
+
+    dispatch({
+      type: TEAM_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
+    dispatch({
+      type: TEAM_DETAILS_FAIL,
+      payload: message,
+    });
+  }
+};
+
 export const createTeam = (name) => async (dispatch, getState) => {
   try {
     dispatch({
       type: TEAM_CREATE_REQUEST,
     });
+
 
     const {
       userLogin: { userInfo },

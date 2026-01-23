@@ -54,10 +54,10 @@ const createProjectWithAI = asyncHandler(async (req, res) => {
     messages: [
       {
         role: 'user',
-        content: `Analyze the following project goal: "${goal}". Based on your analysis, generate a detailed project plan as a JSON object. The JSON object should contain a "tasks" array. Each task in the array should have a "name", a "duration" (in days), a list of "dependencies" (as an array of task names), and a "subtasks" array. Each subtask should have a "name", "duration", and "dependencies". Break down the project into a comprehensive list of tasks and sub-tasks, ensuring every step is captured. The output should be a JSON object with a "tasks" array.`,
+        content: `Analyze the following project goal: "${goal}". Based on your analysis, generate a detailed project plan as a JSON object. The JSON object should contain a 'tasks' array. Each task in the array should have a 'name', a 'description', a 'duration' (in days), a list of 'dependencies' (as an array of task names), and a 'subtasks' array. Each subtask should also have a 'name', 'description', 'duration', and 'dependencies'. The descriptions should be detailed and provide a clear understanding of what each task and sub-task entails. Break down the project into a comprehensive and hierarchical list of tasks and sub-tasks, ensuring every step is captured. The output should be a JSON object with a 'tasks' array.`,
       },
     ],
-    model: 'qwen/qwen3-32b',
+    model: 'openai/gpt-oss-120b',
     response_format: { type: "json_object" },
   });
 
@@ -81,15 +81,16 @@ const createProjectWithAI = asyncHandler(async (req, res) => {
     const createdTasks = [];
     // First pass: Create tasks without dependencies to populate the name->ID map.
     for (const task of tasks) {
-      const newTask = new Task({
-        name: task.name,
-        duration: task.duration,
-        dependencies: [], // Handled in the second pass
-        team: teamId,
-        project: createdProject._id,
-        owner: req.user._id,
-        parent: parentId,
-      });
+            const newTask = new Task({
+              name: task.name,
+              description: task.description,
+              duration: task.duration,
+              dependencies: [], // Handled in the second pass
+              team: teamId,
+              project: createdProject._id,
+              owner: req.user._id,
+              parent: parentId,
+            });
       const createdTask = await newTask.save();
       createdTasks.push(createdTask);
       allTasks.push(createdTask);
@@ -126,6 +127,7 @@ const createProjectWithAI = asyncHandler(async (req, res) => {
     const team = await Team.findById(teamId);
     if (team) {
       team.tasks.push(...allTasks.map(task => task._id));
+      team.projects.push(createdProject._id);
       await team.save();
     }
   }
@@ -163,9 +165,16 @@ const getProjectById = asyncHandler(async (req, res) => {
 
     if (project) {
         // A function to recursively populate subTasks
+        const processedTasks = new Set();
         const populateSubTasks = async (tasks) => {
             for (let i = 0; i < tasks.length; i++) {
-                if (tasks[i].subTasks && tasks[i].subTasks.length > 0) {
+                if (tasks[i] && tasks[i].subTasks && tasks[i].subTasks.length > 0) {
+                    // Check if the task has already been processed
+                    if (processedTasks.has(tasks[i]._id.toString())) {
+                        continue; // Skip if already processed
+                    }
+                    processedTasks.add(tasks[i]._id.toString());
+
                     tasks[i] = await tasks[i].populate({
                         path: 'subTasks',
                         select: 'name status duration priority assignee subTasks',
@@ -210,9 +219,71 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create a new empty project
+// @route   POST /api/projects
+// @access  Private
+const createProject = asyncHandler(async (req, res) => {
+  const { name, goal, dueDate, teamId } = req.body;
+
+  if (!name) {
+    res.status(400);
+    throw new Error('Project name is required');
+  }
+
+  const project = new Project({
+    name,
+    goal,
+    dueDate,
+    team: teamId,
+    owner: req.user._id,
+    tasks: [], // Explicitly set tasks to an empty array
+  });
+
+  const createdProject = await project.save();
+
+  if (teamId) {
+    const team = await Team.findById(teamId);
+    if (team) {
+      team.projects.push(createdProject._id);
+      await team.save();
+    }
+  }
+
+  res.status(201).json(createdProject);
+});
+
+// @desc    Update a project
+// @route   PUT /api/projects/:id
+// @access  Private
+const updateProject = asyncHandler(async (req, res) => {
+  const { name, goal, dueDate, teamId } = req.body;
+
+  const project = await Project.findById(req.params.id);
+
+  if (project) {
+    if (project.owner.toString() !== req.user._id.toString()) {
+      res.status(401);
+      throw new Error('Not authorized to update this project');
+    }
+
+    project.name = name || project.name;
+    project.goal = goal || project.goal;
+    project.dueDate = dueDate || project.dueDate;
+    project.team = teamId || project.team;
+
+    const updatedProject = await project.save();
+    res.json(updatedProject);
+  } else {
+    res.status(404);
+    throw new Error('Project not found');
+  }
+});
+
 module.exports = {
   getProjects,
   createProjectWithAI,
   getProjectById,
   deleteProject,
+  createProject,
+  updateProject,
 };

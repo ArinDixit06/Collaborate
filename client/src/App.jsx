@@ -12,6 +12,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProjectCreateScreen from './screens/ProjectCreateScreen';
 import ProjectScreen from './screens/ProjectScreen';
 import OngoingProjectsScreen from './screens/OngoingProjectsScreen';
+import TeamDetailsScreen from './screens/TeamDetailsScreen';
 
 // import other screens as needed
 
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/register" element={<RegisterScreen />} />
             <Route path="/teams" element={<TeamScreen />} />
+            <Route path="/team/:id" element={<TeamDetailsScreen />} />
             <Route path="/tasks" element={<TaskScreen />} />
             <Route path="/task/create" element={<TaskEditScreen />} />
             <Route path="/task/:id/edit" element={<TaskEditScreen />} />

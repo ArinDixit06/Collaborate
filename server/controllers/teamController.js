@@ -1,7 +1,28 @@
 const Team = require('../models/Team');
 const User = require('../models/User');
 const Task = require('../models/Task');
+const Project = require('../models/Project');
 const asyncHandler = require('../middleware/asyncHandler');
+
+// @desc    Get a team by its ID
+// @route   GET /api/teams/:id
+// @access  Private
+const getTeamById = asyncHandler(async (req, res) => {
+  const team = await Team.findById(req.params.id)
+    .populate('owner', 'name email')
+    .populate('members', 'name email')
+    .populate({
+      path: 'projects',
+      model: 'Project',
+    });
+
+  if (team) {
+    res.json(team);
+  } else {
+    res.status(404);
+    throw new Error('Team not found');
+  }
+});
 
 // @desc    Create a new team
 // @route   POST /api/teams
@@ -217,4 +238,5 @@ module.exports = {
   joinTeam,
   deleteTeam,
   updateTeamJoinRequest,
+  getTeamById,
 };

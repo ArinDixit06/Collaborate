@@ -18,6 +18,12 @@ const teamSchema = mongoose.Schema(
             ref: 'Task',
         }
     ],
+    projects: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Project',
+        }
+    ],
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

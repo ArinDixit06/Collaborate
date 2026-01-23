@@ -12,6 +12,7 @@ import {
   teamJoinReducer,
   teamDeleteReducer,
   teamUpdateJoinRequestReducer,
+  teamDetailsReducer,
 } from './reducers/teamReducers';
 import {
   taskListReducer,
@@ -20,7 +21,7 @@ import {
   taskDetailsReducer,
   taskDeleteReducer,
 } from './reducers/taskReducers';
-import { projectCreateWithAIReducer, projectDetailsReducer, projectListReducer, projectDeleteReducer } from './reducers/projectReducers';
+import { projectCreateWithAIReducer, projectDetailsReducer, projectListReducer, projectDeleteReducer, projectCreateReducer, projectUpdateReducer } from './reducers/projectReducers';
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   teamJoin: teamJoinReducer,
   teamDelete: teamDeleteReducer,
   teamUpdateJoinRequest: teamUpdateJoinRequestReducer,
+  teamDetails: teamDetailsReducer,
   taskList: taskListReducer,
   taskCreate: taskCreateReducer,
   taskUpdate: taskUpdateReducer,
@@ -40,6 +42,8 @@ const reducer = combineReducers({
   projectDetails: projectDetailsReducer,
   projectList: projectListReducer,
   projectDelete: projectDeleteReducer,
+  projectCreate: projectCreateReducer,
+  projectUpdate: projectUpdateReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

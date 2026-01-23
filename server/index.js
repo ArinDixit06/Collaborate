@@ -26,7 +26,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 }); // Initialize socket.io
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3003;
 
 app.use(cors()); // Use cors middleware
 app.use(express.json()); // For parsing application/json

@@ -1632,3 +1632,64 @@ main {
 .side-drawer-body .form-group.floating-label label {
   background-color: var(--bg-main-canvas); /* Match drawer body background */
 }
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.modal-content {
+  background-color: var(--bg-card-panel);
+  padding: 2rem;
+  border-radius: var(--border-radius-base);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-medium-emphasis);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-btn {
+  background: none;
+  border: 1px solid var(--border-divider);
+  color: var(--text-medium-emphasis);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.toggle-btn.active {
+  background-color: var(--primary-brand-color);
+  color: var(--text-high-emphasis);
+  border-color: var(--primary-brand-color);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
