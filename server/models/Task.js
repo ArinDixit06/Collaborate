@@ -36,10 +36,21 @@ const taskSchema = mongoose.Schema(
       ref: 'Team',
     },
     project: {
-        type: String, // Can be 'team' or 'solo'
-        required: true,
-        default: 'team',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
     },
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task',
+      default: null,
+    },
+    subTasks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task',
+      },
+    ],
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

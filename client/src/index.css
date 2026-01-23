@@ -1279,3 +1279,356 @@ main {
     font-size: 1.5rem;
   }
 }
+
+/* Project Details Screen Styling (ProjectScreen.jsx) */
+.project-details-page {
+  /* Use the main-content padding */
+  padding: 0; /* Remove padding from here as main-content has it */
+}
+
+/* Adjust main content padding to allow back button to reach edge */
+.main-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: var(--bg-main-canvas); /* Ensure consistent background */
+}
+
+.project-details-page .back-button {
+  margin-bottom: 1.5rem;
+  margin-left: 1.5rem; /* Align with main-content padding */
+  margin-top: 1.5rem;
+}
+
+
+.project-hero-header {
+  background-color: var(--bg-card-panel); /* Use slightly darker shade for header */
+  border-bottom: 1px solid var(--border-divider);
+  padding: 2rem 1.5rem; /* Increased padding for hero feel */
+  margin-bottom: 2rem; /* Space before tasks list */
+  border-radius: var(--border-radius-base); /* Rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative; /* For absolute positioning of Add Task button */
+}
+
+.project-hero-title-and-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.project-detail-title {
+  font-size: 2.5rem; /* Larger title */
+  font-weight: 700;
+  color: var(--text-high-emphasis);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.project-detail-goal {
+  font-size: 1rem;
+  color: var(--text-medium-emphasis);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.add-task-btn {
+  background-color: var(--primary-brand-color); /* Primary brand color for add task button */
+  color: var(--text-high-emphasis);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--border-radius-base);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.add-task-btn:hover {
+  background-color: #8C8EFF; /* Lighter shade of primary for hover */
+  box-shadow: 0 4px 10px rgba(var(--primary-brand-color-rgb), 0.4);
+}
+
+.project-metadata-badges {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 1rem; /* Space between badges */
+  margin-bottom: 1.5rem;
+}
+
+.metadata-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-subtle-element); /* Subtle background for badges */
+  color: var(--text-medium-emphasis);
+  padding: 0.5rem 1rem;
+  border-radius: 20px; /* Pill shape */
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--border-divider);
+}
+
+.metadata-badge svg {
+  color: var(--primary-brand-color); /* Icon color */
+}
+
+.project-progress-bar {
+  margin-top: 1.5rem;
+}
+
+/* Override existing progress bar styles for project specific */
+.project-progress-bar .progress-bar-container {
+  height: 10px;
+  border-radius: 5px;
+  background-color: var(--bg-subtle-element);
+  margin-bottom: 0.5rem;
+}
+
+.project-progress-bar .progress-bar-fill {
+  background-color: var(--status-success); /* Green for progress */
+  border-radius: 5px;
+}
+
+.project-progress-bar .progress-text {
+  font-size: 0.9rem;
+  color: var(--text-medium-emphasis);
+  text-align: right;
+}
+
+/* Modern Task List */
+.modern-task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: var(--bg-card-panel); /* Slightly different shade for task list container */
+  border-radius: var(--border-radius-base);
+  border: 1px solid var(--border-divider);
+  overflow: hidden; /* For rounded corners on first/last item */
+}
+
+.task-list-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-divider);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.task-list-item:last-child {
+  border-bottom: none; /* No border for the last item */
+}
+
+.task-list-item:hover {
+  background-color: var(--bg-subtle-element); /* Hover effect */
+}
+
+.task-checkbox {
+  flex-shrink: 0; /* Don't allow checkbox to shrink */
+  margin-right: 1rem;
+  font-size: 1.2rem;
+  color: var(--text-medium-emphasis);
+  cursor: pointer;
+}
+
+.task-checkbox:hover {
+    color: var(--primary-brand-color);
+}
+
+.task-name {
+  flex-grow: 1; /* Allow task name to take available space */
+  font-size: 1rem;
+  color: var(--text-high-emphasis);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 1rem; /* Space before tags/status */
+}
+
+.task-name.completed {
+  text-decoration: line-through;
+  color: var(--text-low-emphasis);
+}
+
+.task-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0; /* Prevent tags from shrinking */
+}
+
+.task-tag {
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px; /* Pill shape */
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-high-emphasis);
+  white-space: nowrap;
+}
+
+.assignee-tag {
+    background-color: var(--bg-subtle-element); /* Neutral background for assignee */
+    border: 1px solid var(--border-divider);
+    color: var(--text-medium-emphasis);
+}
+
+/* Specific status pill styling */
+.task-status-pill {
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Dynamically set background color for status pill */
+.task-status-pill.status-todo {
+    background-color: rgba(var(--status-info-rgb), 0.15);
+    color: var(--status-info);
+}
+
+.task-status-pill.status-inprogress {
+    background-color: rgba(var(--primary-brand-color-rgb), 0.15);
+    color: var(--primary-brand-color);
+}
+
+.task-status-pill.status-completed {
+    background-color: rgba(var(--status-success-rgb), 0.15);
+    color: var(--status-success);
+}
+
+.task-status-pill.status-blocked {
+    background-color: rgba(var(--status-error-rgb), 0.15);
+    color: var(--status-error);
+}
+
+
+.task-edit-button {
+  flex-shrink: 0;
+  margin-left: 1rem;
+  font-size: 1.1rem;
+  color: var(--text-low-emphasis);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-base);
+}
+
+.task-edit-button:hover {
+  background-color: var(--bg-subtle-element);
+  color: var(--text-high-emphasis);
+}
+
+/* Media Queries for Project Details Screen */
+@media (max-width: 768px) {
+  .project-hero-header {
+    padding: 1.5rem 1rem;
+  }
+  .project-hero-title-and-action {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .project-detail-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .add-task-btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+  .project-metadata-badges {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .task-list-item {
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+  }
+  .task-name {
+    margin-right: 0.5rem;
+    width: calc(100% - 3rem); /* Adjust for checkbox */
+  }
+  .task-tags {
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .task-edit-button {
+    margin-left: auto;
+  }
+}
+
+/* Side Drawer Styling */
+.side-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+  z-index: 1000; /* Above all other content */
+  display: flex;
+  justify-content: flex-end; /* Align drawer to the right */
+}
+
+.side-drawer-content {
+  background-color: var(--bg-main-canvas); /* Main background for the drawer */
+  width: 100%;
+  max-width: 450px; /* Max width for the drawer */
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Enable scrolling for drawer content */
+  transform: translateX(0); /* Ensure it's visible */
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.side-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-divider);
+  background-color: var(--bg-card-panel); /* Slightly darker header */
+}
+
+.drawer-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-high-emphasis);
+  margin: 0;
+}
+
+.drawer-close-button {
+  font-size: 1.5rem;
+  color: var(--text-medium-emphasis);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-base);
+}
+
+.drawer-close-button:hover {
+  background-color: var(--bg-subtle-element);
+  color: var(--text-high-emphasis);
+}
+
+.side-drawer-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+.drawer-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Adjust floating label for drawer forms */
+.side-drawer-body .form-group.floating-label label {
+  background-color: var(--bg-main-canvas); /* Match drawer body background */
+}

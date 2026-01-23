@@ -54,7 +54,7 @@ const createProjectWithAI = asyncHandler(async (req, res) => {
     messages: [
       {
         role: 'user',
-        content: `Generate a JSON list of tasks for the following project: "${goal}". Each task should have a "name", "duration" (in days), and "dependencies" (an array of task names). The output should be a JSON array of objects.`,
+        content: `Analyze the following project goal: "${goal}". Based on your analysis, generate a detailed project plan as a JSON object. The JSON object should contain a "tasks" array. Each task in the array should have a "name", a "duration" (in days), a list of "dependencies" (as an array of task names), and a "subtasks" array. Each subtask should have a "name", "duration", and "dependencies". Break down the project into a comprehensive list of tasks and sub-tasks, ensuring every step is captured. The output should be a JSON object with a "tasks" array.`,
       },
     ],
     model: 'qwen/qwen3-32b',
@@ -73,45 +73,59 @@ const createProjectWithAI = asyncHandler(async (req, res) => {
   });
 
   const createdProject = await project.save();
-  
-  const createdTasks = [];
+
+  const allTasks = [];
   const taskNameToIdMap = new Map();
 
-  // First pass: Create tasks without dependencies and build a map of task names to their IDs
-  for (const task of taskData) {
-    const newTask = new Task({
-      name: task.name,
-      duration: task.duration,
-      dependencies: [], // Temporarily empty
-      team: teamId,
-      project: createdProject._id,
-      owner: req.user._id,
-    });
-    const createdTask = await newTask.save();
-    createdTasks.push(createdTask);
-    taskNameToIdMap.set(task.name, createdTask._id);
-  }
+  async function createTasks(tasks, parentId = null) {
+    const createdTasks = [];
+    // First pass: Create tasks without dependencies to populate the name->ID map.
+    for (const task of tasks) {
+      const newTask = new Task({
+        name: task.name,
+        duration: task.duration,
+        dependencies: [], // Handled in the second pass
+        team: teamId,
+        project: createdProject._id,
+        owner: req.user._id,
+        parent: parentId,
+      });
+      const createdTask = await newTask.save();
+      createdTasks.push(createdTask);
+      allTasks.push(createdTask);
+      taskNameToIdMap.set(task.name, createdTask._id);
+    }
 
-  // Second pass: Update dependencies using the map
-  for (let i = 0; i < taskData.length; i++) {
-      const originalTask = taskData[i];
+    // Second pass: Now that the map is populated, handle dependencies and subtasks.
+    for (let i = 0; i < tasks.length; i++) {
+      const taskData = tasks[i];
       const createdTask = createdTasks[i];
 
-      if (originalTask.dependencies && originalTask.dependencies.length > 0) {
-          createdTask.dependencies = originalTask.dependencies
-              .map(depName => taskNameToIdMap.get(depName))
-              .filter(depId => depId); // Filter out any undefined IDs if a dependency name wasn't found
-          await createdTask.save();
+      if (taskData.dependencies && taskData.dependencies.length > 0) {
+        createdTask.dependencies = taskData.dependencies
+          .map(depName => taskNameToIdMap.get(depName))
+          .filter(depId => depId);
+        await createdTask.save();
       }
+
+      if (taskData.subtasks && taskData.subtasks.length > 0) {
+        const subtaskIds = await createTasks(taskData.subtasks, createdTask._id);
+        createdTask.subTasks = subtaskIds; // Assuming 'subTasks' is the field name in your Task model
+        await createdTask.save();
+      }
+    }
+    return createdTasks.map(t => t._id);
   }
-  
-  createdProject.tasks = createdTasks.map(task => task._id);
+
+  await createTasks(taskData);
+
+  createdProject.tasks = allTasks.filter(t => !t.parent).map(t => t._id);
   await createdProject.save();
 
   if (teamId) {
     const team = await Team.findById(teamId);
     if (team) {
-      team.tasks.push(...createdTasks.map(task => task._id));
+      team.tasks.push(...allTasks.map(task => task._id));
       await team.save();
     }
   }
@@ -131,7 +145,7 @@ const getProjectById = asyncHandler(async (req, res) => {
     const project = await Project.findById(req.params.id)
         .populate({
             path: 'tasks',
-            select: 'name status duration priority assignee', // Explicitly select required fields
+            select: 'name status duration priority assignee subTasks', // Explicitly select required fields
             populate: {
                 path: 'assignee',
                 select: 'name email',
@@ -148,6 +162,24 @@ const getProjectById = asyncHandler(async (req, res) => {
         });
 
     if (project) {
+        // A function to recursively populate subTasks
+        const populateSubTasks = async (tasks) => {
+            for (let i = 0; i < tasks.length; i++) {
+                if (tasks[i].subTasks && tasks[i].subTasks.length > 0) {
+                    tasks[i] = await tasks[i].populate({
+                        path: 'subTasks',
+                        select: 'name status duration priority assignee subTasks',
+                        populate: {
+                            path: 'assignee',
+                            select: 'name email',
+                        }
+                    });
+                    await populateSubTasks(tasks[i].subTasks);
+                }
+            }
+        };
+
+        await populateSubTasks(project.tasks);
         res.json(project);
     } else {
         res.status(404);

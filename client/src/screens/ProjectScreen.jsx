@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from 'react'; // Import useState
-import { Link, useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useEffect, useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjectDetails } from '../actions/projectActions';
-import { updateTask } from '../actions/taskActions'; // Import updateTask action for checkbox
+import { updateTask } from '../actions/taskActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import TaskSideDrawer from '../components/TaskSideDrawer'; // Import TaskSideDrawer
-import { FaEdit, FaCheckSquare, FaSquare } from 'react-icons/fa'; // Icons for tasks
+import TaskSideDrawer from '../components/TaskSideDrawer';
+import { FaEdit, FaCheckSquare, FaSquare, FaCalendarAlt, FaUser, FaUsers, FaPlus } from 'react-icons/fa'; // Added FaCalendarAlt, FaUser, FaPlus
+
+const calculateProgress = (tasks) => {
+  if (!tasks || tasks.length === 0) return 0;
+  const completedTasks = tasks.filter(task => task.status === 'Completed').length;
+  return Math.round((completedTasks / tasks.length) * 100);
+};
 
 const ProjectScreen = () => {
   const { id: projectId } = useParams();
@@ -15,7 +21,7 @@ const ProjectScreen = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
-  const [isCreatingTask, setIsCreatingTask] = useState(false); // New state for create mode
+  const [isCreatingTask, setIsCreatingTask] = useState(false);
 
   const projectDetails = useSelector((state) => state.projectDetails);
   const { loading, error, project } = projectDetails;
@@ -39,46 +45,46 @@ const ProjectScreen = () => {
     dispatch(updateTask({ ...task, status: newStatus }));
   };
 
-  const handleEditTask = (taskId) => { // Renamed from openDrawer
+  const handleEditTask = (taskId) => {
     setSelectedTaskId(taskId);
-    setIsCreatingTask(false); // Ensure it's edit mode
+    setIsCreatingTask(false);
     setIsDrawerOpen(true);
   };
 
-  const handleAddTask = () => { // New function for adding task
-    setSelectedTaskId(null); // No task selected for creation
-    setIsCreatingTask(true); // Set to create mode
+  const handleAddTask = () => {
+    setSelectedTaskId(null);
+    setIsCreatingTask(true);
     setIsDrawerOpen(true);
   };
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setSelectedTaskId(null);
-    setIsCreatingTask(false); // Reset create mode
+    setIsCreatingTask(false);
     dispatch(getProjectDetails(projectId));
   };
 
-  // Helper to get status color (moved here or into common utility if used elsewhere)
   const getStatusColor = (status) => {
     switch (status) {
       case 'Completed': return 'var(--status-success)';
       case 'In Progress': return 'var(--status-info)';
       case 'Blocked': return 'var(--status-error)';
-      case 'To Do': return 'var(--text-medium-emphasis)'; // or another neutral color
+      case 'To Do': return 'var(--text-medium-emphasis)';
       default: return 'var(--text-medium-emphasis)';
     }
   };
 
-  // Helper to get priority color
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'High': return 'var(--status-error)';
       case 'Medium': return 'var(--status-warning)';
-      case 'Low': return 'var(--status-success)'; // Or another subtle color
+      case 'Low': return 'var(--status-success)';
       case 'Urgent': return 'var(--status-error)';
       default: return 'var(--text-medium-emphasis)';
     }
   };
+
+  const progress = project ? calculateProgress(project.tasks) : 0;
 
   return (
     <div className="project-details-page">
@@ -93,28 +99,40 @@ const ProjectScreen = () => {
       ) : (
         project && (
           <>
-            <div className="project-header-details">
-              <h1 className="project-detail-title">{project.name}</h1>
+            <div className="project-hero-header">
+              <div className="project-hero-title-and-action">
+                <h1 className="project-detail-title">{project.name}</h1>
+                <button className="btn btn-primary btn-small add-task-btn" onClick={handleAddTask}>
+                  <FaPlus /> Add Task
+                </button>
+              </div>
               <p className="project-detail-goal">{project.goal}</p>
-              <div className="project-meta">
-                <span className="meta-item">
-                  <strong>Due Date:</strong> {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'N/A'}
-                </span>
-                <span className="meta-item">
-                  <strong>Owner:</strong> {project.owner ? project.owner.name : 'N/A'}
-                </span>
-                <span className="meta-item">
-                  <strong>Team:</strong> {project.team ? project.team.name : 'N/A'}
-                </span>
+              <div className="project-metadata-badges">
+                {project.dueDate && (
+                  <span className="metadata-badge">
+                    <FaCalendarAlt /> {new Date(project.dueDate).toLocaleDateString()}
+                  </span>
+                )}
+                {project.owner && (
+                  <span className="metadata-badge">
+                    <FaUser /> {project.owner.name}
+                  </span>
+                )}
+                {project.team && (
+                  <span className="metadata-badge">
+                    <FaUsers /> {project.team.name}
+                  </span>
+                )}
+              </div>
+              <div className="project-progress-bar">
+                <div className="progress-bar-container">
+                  <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
+                </div>
+                <span className="progress-text">{progress}% Completed</span>
               </div>
             </div>
 
-            <div className="tasks-header">
-              <h2 className="section-title">Tasks</h2>
-              <button className="btn btn-primary btn-small" onClick={handleAddTask}>
-                Add Task
-              </button>
-            </div>
+            <h2 className="section-title mt-4">Tasks</h2>
             {project.tasks && project.tasks.length === 0 ? (
               <Message variant="info">
                 No tasks generated for this project.
@@ -143,7 +161,7 @@ const ProjectScreen = () => {
                           {task.assignee.name}
                         </span>
                       )}
-                      <span className="task-tag" style={{backgroundColor: getStatusColor(task.status)}}>
+                      <span className={`task-status-pill status-${task.status.toLowerCase().replace(/\s/g, '')}`}>
                         {task.status}
                       </span>
                     </div>
@@ -161,7 +179,7 @@ const ProjectScreen = () => {
       {isDrawerOpen && (
         <TaskSideDrawer
           taskId={selectedTaskId}
-          projectId={projectId} // Pass projectId for new task creation
+          projectId={projectId}
           isCreatingTask={isCreatingTask}
           onClose={closeDrawer}
         />
