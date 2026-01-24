@@ -1,4 +1,5 @@
-import api from '../utils/api';
+import api from '../utils/api'; // uses your hardcoded URL
+import { setServerOffline } from './serverActions';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -10,6 +11,9 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_FAIL,
 } from '../constants/userConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -35,6 +39,7 @@ export const login = (email, password) => async (dispatch) => {
       payload: data,
     });
 
+    // Keeping this for compatibility, though redux-persist handles the state now
     localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {
     dispatch({
@@ -124,26 +129,19 @@ export const listUsers = () => async (dispatch, getState) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
+    
     if (message === 'No authorization token found' || message === 'Not authorized, token failed') {
       dispatch(logout());
     } else {
       dispatch(setServerOffline());
     }
+    
     dispatch({
       type: USER_LIST_FAIL,
       payload: message,
     });
   }
 };
-
-import {
-  USER_DETAILS_REQUEST,
-  USER_DETAILS_SUCCESS,
-  USER_DETAILS_FAIL,
-} from '../constants/userConstants';
-import { setServerOffline } from './serverActions';
-
-// ... other actions
 
 export const getUserDetails = (id) => async (dispatch, getState) => {
   try {
@@ -187,15 +185,16 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
+        
     if (message === 'No authorization token found' || message === 'Not authorized, token failed') {
       dispatch(logout());
     } else {
       dispatch(setServerOffline());
     }
+    
     dispatch({
       type: USER_DETAILS_FAIL,
       payload: message,
     });
   }
 };
-
