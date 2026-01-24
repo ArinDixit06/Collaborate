@@ -1,4 +1,5 @@
 import React from 'react';
+import './Sidebar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/userActions';
@@ -19,7 +20,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   return (
     <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
       <div className="sidebar-header">
-        <button className="sidebar-toggle" onClick={toggleSidebar}>
+        <button className="sidebar-toggle sidebar-toggle-desktop" onClick={toggleSidebar}>
           {isSidebarOpen ? <FaTimes /> : <FaBars />}
         </button>
         {isSidebarOpen && <h2 className="app-title">Collaborate</h2>}
