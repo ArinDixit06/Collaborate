@@ -898,9 +898,59 @@
     .metadata-badge, .project-info p, .team-card div:not(.team-actions) { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
 
     .task-list-item {
-      flex-direction: column; /* Stack items vertically */
-      align-items: flex-start; /* Align to the start */
-      gap: 0.5rem; /* Add some spacing between stacked items */
+      display: flex; /* Ensure it's a flex container */
+      flex-direction: row; /* Keep as row for the main items */
+      flex-wrap: wrap; /* Allow items to wrap to next line */
+      align-items: center; /* Align items to the center of the cross axis */
       padding: 0.75rem 1rem; /* Adjust padding */
+      gap: 0.5rem; /* Add some spacing between stacked items */
+    }
+
+    .task-list-item .task-checkbox {
+      flex-shrink: 0; /* Don't shrink the checkbox */
+    }
+
+    .task-list-item .task-details {
+      flex-grow: 1; /* Allow task details to take up available space */
+      min-width: 0; /* Prevent content from overflowing */
+    }
+
+    .task-list-item .task-name {
+      font-size: 1rem; /* Adjust font size for readability */
+      margin-right: 0.5rem; /* Space between name and status/edit */
+    }
+
+    .task-list-item .task-description {
+      font-size: 0.85rem;
+      margin-top: 0.25rem; /* Space below task name */
+      width: 100%; /* Ensure description takes full width */
+    }
+
+    .task-list-item .task-tags {
+      flex-basis: 100%; /* Force tags to a new line */
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .task-list-item .task-status-pill {
+      font-size: 0.7rem; /* Smaller pill text */
+    }
+
+    .task-list-item .task-edit-button {
+      flex-shrink: 0; /* Don't shrink edit button */
+      margin-left: auto; /* Push to the right if space allows, or align under tags */
+      align-self: flex-end; /* Align to the end of the cross axis */
+    }
+
+    .project-hero-title-and-action {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .add-task-btn {
+      width: 100%;
     }
   }
