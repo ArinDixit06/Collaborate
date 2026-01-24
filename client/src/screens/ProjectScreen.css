@@ -311,57 +311,106 @@
 
     
 
-    .project-hero-header {
+    .project-hero-section {
+    max-width: 1000px;
+    margin: 0 auto 60px auto; /* Added generous padding-bottom via margin */
+    padding: 40px 20px;
+}
 
-      background-color: transparent;
+.project-hero-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
 
-      padding: 0;
+.back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--primary-blue);
+    font-weight: 500;
+}
 
-      margin-bottom: 2rem;
+.add-task-btn {
+    background-image: linear-gradient(to-bottom, #0071e3, #005bb7);
+    color: #fff;
+    border-radius: 980px; /* Perfect pill shape */
+    padding: 10px 24px;
+    font-weight: 500;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
-      border: none;
+.add-task-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 15px rgba(0, 113, 227, 0.2);
+}
 
-      box-shadow: none;
+.project-detail-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px; /* High tracking */
+    color: var(--text-primary);
+}
 
-    }
+.project-description-container {
+    max-width: 800px; /* Max width for readability */
+    margin: 0 auto 32px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
 
-    
+.project-description-column h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
 
-    .project-detail-title {
+.project-description-text {
+    color: #424245; /* Medium-gray */
+    font-size: 1rem;
+    line-height: 1.6;
+}
 
-      font-size: 2.5rem;
+.project-description-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
 
-      font-weight: 700;
+.project-meta-footer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 40px;
+}
 
-      margin-bottom: 0.5rem;
+.project-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245, 245, 247, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-    }
+.section-separator {
+    width: 100%;
+    height: 1px;
+    background-color: #d2d2d7;
+    margin: 0 auto;
+}
 
-    
-
-    /* Kept for other screens that might use it, but not for the project card */
-
-    .metadata-badge {
-
-      display: inline-flex;
-
-      align-items: center;
-
-      gap: 0.5rem;
-
-      background: rgba(255, 255, 255, 0.5);
-
-      color: var(--text-medium-emphasis);
-
-      padding: 0.5rem 1rem;
-
-      border-radius: 20px;
-
-      font-size: 0.85rem;
-
-      border: 1px solid rgba(255, 255, 255, 0.3);
-
-    }
 
     
 

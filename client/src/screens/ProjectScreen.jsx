@@ -7,7 +7,7 @@ import { updateTask } from '../actions/taskActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import TaskSideDrawer from '../components/TaskSideDrawer';
-import { FaEdit, FaCheckSquare, FaSquare, FaCalendarAlt, FaUser, FaUsers, FaPlus, FaCheck, FaMinus } from 'react-icons/fa'; // Added FaCalendarAlt, FaUser, FaPlus
+import { FaEdit, FaCheckSquare, FaSquare, FaCalendarAlt, FaUser, FaUsers, FaPlus, FaCheck, FaMinus, FaChevronLeft } from 'react-icons/fa'; // Added FaCalendarAlt, FaUser, FaPlus
 
 const calculateProgress = (tasks) => {
   if (!tasks || tasks.length === 0) return 0;
@@ -165,55 +165,62 @@ const ProjectScreen = () => {
       ) : (
         project && (
           <>
-            <div className="project-hero-header">
-              <div className="project-hero-title-and-action">
-                {isEditing ? (
-                  <div className="edit-project-name">
-                    <input
-                      type="text"
-                      value={projectName}
-                      onChange={handleProjectNameChange}
-                    />
-                    <button onClick={handleSaveProjectName}>Save</button>
-                    <button onClick={() => setIsEditing(false)}>Cancel</button>
-                  </div>
-                ) : (
-                  <>
-                    <h1 className="project-detail-title">{project.name}</h1>
-                    <button onClick={() => setIsEditing(true)}>
-                      <FaEdit />
-                    </button>
-                  </>
-                )}
-                <button className="btn btn-primary btn-small add-task-btn" onClick={handleAddTask}>
+            <div className="project-hero-section">
+              <div className="project-hero-actions">
+                <Link to="/projects/ongoing" className="back-link">
+                  <FaChevronLeft />
+                  <span>All Projects</span>
+                </Link>
+                <button className="add-task-btn" onClick={handleAddTask}>
                   <FaPlus /> Add Task
                 </button>
               </div>
-              <p className="project-detail-goal">{project.goal}</p>
-              <div className="project-metadata-badges">
+
+              <h1 className="project-detail-title">{project.name}</h1>
+
+              {project.goal && (
+                <div className="project-description-container">
+                  <div className="project-description-column">
+                    <h3>The Challenge</h3>
+                    <p className="project-description-text">
+                      {project.goal.substring(0, project.goal.length / 2)}
+                    </p>
+                  </div>
+                  <div className="project-description-column">
+                    <h3>The Solution</h3>
+                    <p className="project-description-text">
+                      {project.goal.substring(project.goal.length / 2)}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="project-meta-footer">
                 {project.dueDate && (
-                  <span className="metadata-badge">
-                    <FaCalendarAlt /> {new Date(project.dueDate).toLocaleDateString()}
-                  </span>
+                  <div className="project-meta-item">
+                    <FaCalendarAlt /> <span>{new Date(project.dueDate).toLocaleDateString()}</span>
+                  </div>
                 )}
                 {project.owner && (
-                  <span className="metadata-badge">
-                    <FaUser /> {project.owner.name}
-                  </span>
+                  <div className="project-meta-item">
+                    <FaUser /> <span>{project.owner.name}</span>
+                  </div>
                 )}
                 {project.team && (
-                  <span className="metadata-badge">
-                    <FaUsers /> {project.team.name}
-                  </span>
+                  <div className="project-meta-item">
+                    <FaUsers /> <span>{project.team.name}</span>
+                  </div>
                 )}
               </div>
+
               <div className="project-progress-bar">
                 <div className="progress-bar-container">
                   <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
                 </div>
-                <span className="progress-text">{progress}% Completed</span>
               </div>
             </div>
+            
+            <div className="section-separator"></div>
 
             <h2 className="section-title mt-4">Tasks</h2>
             {project.tasks && project.tasks.length === 0 ? (
