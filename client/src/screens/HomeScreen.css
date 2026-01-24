@@ -1,76 +1,70 @@
 
-/* =========================================
-    5. DASHBOARD SCREEN
-    ========================================= */
-  .dashboard-title {
+.dashboard-title {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 2rem;
   }
 
-  /* !!! DASHBOARD GRID SPACING FIX !!! */
   .action-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 3rem; /* Space from Welcome Banner */
+    gap: 2rem; /* Increased gap for more breathing room */
+    margin-top: 3rem;
     margin-bottom: 2.5rem;
   }
 
   .action-card {
-    background-color: var(--bg-glass-medium);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: var(--border-glass-highlight);
-    border-radius: 20px;
-    padding: 1.5rem;
+    background-color: var(--background-card);
+    border: none; /* No border */
+    border-radius: var(--radius-squircle);
+    padding: 2rem; /* More padding */
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    box-shadow: var(--shadow-glass);
-    will-change: transform, background-color, box-shadow; /* Optimize for these properties */
+    transition: all var(--transition-main);
+    box-shadow: var(--shadow-soft);
   }
   .action-card:hover {
-    transform: translateY(-5px);
-    background-color: rgba(255, 255, 255, 0.75);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
   }
 
   .action-card-icon {
-    font-size: 3rem;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 2.5rem; /* Slightly smaller, thinner look */
+    color: var(--primary-blue);
     margin-bottom: 1rem;
+    /* Reset gradient text style */
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
   }
   .action-card-title {
     font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-high-emphasis);
+    font-weight: 600; /* Less heavy */
+    color: var(--text-primary);
   }
   .action-card-description {
     font-size: 0.9rem;
-    color: var(--text-medium-emphasis);
+    color: var(--text-secondary);
   }
 
   .pending-requests-section {
-    background-color: var(--bg-glass-medium);
-    backdrop-filter: blur(12px);
-    border: var(--border-glass-highlight);
-    border-radius: 20px;
-    padding: 1.5rem;
+    background-color: var(--background-card);
+    border: none;
+    border-radius: var(--radius-squircle);
+    padding: 2rem;
     margin-bottom: 2.5rem;
-    box-shadow: var(--shadow-glass);
+    box-shadow: var(--shadow-soft);
   }
 
   .request-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
+    background-color: var(--background-input);
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
     margin-bottom: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: none;
   }
