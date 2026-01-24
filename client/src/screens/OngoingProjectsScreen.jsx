@@ -28,54 +28,57 @@ const ProjectListItem = ({ project, userInfo, onDelete }) => {
         <Link to={`/project/${project._id}`} className="project-name-link">
           {project.name}
         </Link>
-        <div className="project-metadata-badges">
+        <div className="project-metadata-capsules">
           {project.dueDate && (
-            <div className="metadata-badge">
+            <div className="metadata-capsule">
               <FaCalendarAlt />
-              <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
+              <span>{new Date(project.dueDate).toLocaleDateString()}</span>
             </div>
           )}
           {project.owner && (
-            <div className="metadata-badge">
+            <div className="metadata-capsule">
               <FaUser />
               <span>{project.owner.name}</span>
             </div>
           )}
           {project.team && (
-            <div className="metadata-badge">
+            <div className="metadata-capsule">
               <FaUsers />
               <span>{project.team.name}</span>
             </div>
           )}
         </div>
       </div>
+      
       <div className="project-progress">
         <div className="progress-bar-container">
           <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
         </div>
-        <span className="progress-text">{progress}% Complete</span>
       </div>
-      <div className="project-team-avatars">
-        {project.team && project.team.members && project.team.members.slice(0, 3).map((member) => (
-          <div key={member._id} className="member-avatar" title={member.name}>
-            {member.name.charAt(0).toUpperCase()}
-          </div>
-        ))}
-        {project.team && project.team.members && project.team.members.length > 3 && (
-          <div className="member-avatar-more">
-            +{project.team.members.length - 3}
-          </div>
-        )}
-      </div>
-      <div className="project-actions">
-        <Link to={`/project/${project._id}`} className="btn btn-primary btn-small">
-          View
-        </Link>
-        {isOwner && (
-          <button className="btn btn-icon btn-small btn-danger" onClick={() => onDelete(project._id)}>
-            <FaTrash />
-          </button>
-        )}
+
+      <div className="project-footer">
+        <div className="project-team-avatars">
+          {project.team && project.team.members && project.team.members.slice(0, 3).map((member) => (
+            <div key={member._id} className="member-avatar" title={member.name}>
+              {member.name.charAt(0).toUpperCase()}
+            </div>
+          ))}
+          {project.team && project.team.members && project.team.members.length > 3 && (
+            <div className="member-avatar-more">
+              +{project.team.members.length - 3}
+            </div>
+          )}
+        </div>
+        <div className="project-actions">
+          <Link to={`/project/${project._id}`} className="btn-view-project">
+            View
+          </Link>
+          {isOwner && (
+            <button className="btn-delete-project" onClick={() => onDelete(project._id)}>
+              <FaTrash />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
