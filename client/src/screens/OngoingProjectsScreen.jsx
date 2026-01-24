@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './OngoingProjectsScreen.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaTrash, FaUsers, FaPlus, FaCalendarAlt, FaUser } from 'react-icons/fa';
@@ -10,77 +11,16 @@ import { getUserDetails } from '../actions/userActions'; // Import getUserDetail
 import { PROJECT_DELETE_SUCCESS } from '../constants/projectConstants';
 import ProjectCreateModal from '../components/ProjectCreateModal';
 
-// Helper to calculate progress
-const calculateProgress = (tasks) => {
-  if (!tasks || tasks.length === 0) return 0;
-  const completedTasks = tasks.filter(task => task.status === 'Completed').length;
-  return Math.round((completedTasks / tasks.length) * 100);
-};
 
-// --- New ProjectListItem Component ---
-const ProjectListItem = ({ project, userInfo, onDelete }) => {
-  const isOwner = userInfo && project.owner && project.owner._id === userInfo._id;
-  const progress = calculateProgress(project.tasks);
 
-  return (
-    <div className="project-list-item">
-      <div className="project-info">
-        <Link to={`/project/${project._id}`} className="project-name-link">
-          {project.name}
-        </Link>
-        <div className="project-metadata-badges">
-          {project.dueDate && (
-            <div className="metadata-badge">
-              <FaCalendarAlt />
-              <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
-            </div>
-          )}
-          {project.owner && (
-            <div className="metadata-badge">
-              <FaUser />
-              <span>{project.owner.name}</span>
-            </div>
-          )}
-          {project.team && (
-            <div className="metadata-badge">
-              <FaUsers />
-              <span>{project.team.name}</span>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="project-progress">
-        <div className="progress-bar-container">
-          <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
-        </div>
-        <span className="progress-text">{progress}% Complete</span>
-      </div>
-      <div className="project-team-avatars">
-        {project.team && project.team.members && project.team.members.slice(0, 3).map((member) => (
-          <div key={member._id} className="member-avatar" title={member.name}>
-            {member.name.charAt(0).toUpperCase()}
-          </div>
-        ))}
-        {project.team && project.team.members && project.team.members.length > 3 && (
-          <div className="member-avatar-more">
-            +{project.team.members.length - 3}
-          </div>
-        )}
-      </div>
-      <div className="project-actions">
-        <Link to={`/project/${project._id}`} className="btn btn-primary btn-small">
-          View
-        </Link>
-        {isOwner && (
-          <button className="btn btn-icon btn-small btn-danger" onClick={() => onDelete(project._id)}>
-            <FaTrash />
-          </button>
-        )}
-      </div>
-    </div>
-  );
+const getInitials = (name) => {
+  if (!name) return '';
+  const words = name.split(' ');
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();
+  }
+  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
 };
-// ---------------------------------------------------------------------
 
 const OngoingProjectsScreen = () => {
   const dispatch = useDispatch();
@@ -127,7 +67,7 @@ const OngoingProjectsScreen = () => {
       <div className="project-hero-header">
         <div className="project-hero-title-and-action">
             <h1 className="project-detail-title">Ongoing Projects</h1>
-            <button className="add-task-btn" onClick={openModal}>
+            <button className="btn-gradient" onClick={openModal}>
                 <FaPlus /> Create Project
             </button>
         </div>
@@ -153,14 +93,78 @@ const OngoingProjectsScreen = () => {
                 </button>
             </div>
           ) : (
-            projects.map((project) => (
-              <ProjectListItem
-                key={project._id}
-                project={project}
-                userInfo={userInfo}
-                onDelete={deleteHandler}
-              />
-            ))
+            projects.map((project) => {
+              const isOwner = userInfo && project.owner && project.owner._id === userInfo._id;
+              const progress = calculateProgress(project.tasks);
+
+              return (
+                <div
+                  key={project._id}
+                  className="project-card"
+                  onClick={() => navigate(`/project/${project._id}`)}
+                >
+                  <div className="project-card-header">
+                    <div className="project-avatar" style={{ backgroundColor: project.color || '#7c3aed' }}>
+                      {getInitials(project.name)}
+                    </div>
+                    <div>
+                      <h3 className="project-card-title">{project.name}</h3>
+                      <div className="project-card-meta">
+                        {project.dueDate && (
+                          <div className="project-card-meta-item">
+                            <FaCalendarAlt />
+                            <span>{new Date(project.dueDate).toLocaleDateString()}</span>
+                          </div>
+                        )}
+                        {project.owner && (
+                          <div className="project-card-meta-item">
+                            <FaUser />
+                            <span>{project.owner.name}</span>
+                          </div>
+                        )}
+                        {project.team && (
+                          <div className="project-card-meta-item">
+                            <FaUsers />
+                            <span>{project.team.name}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="project-card-progress">
+                    <div className="progress-bar-container">
+                      <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
+                    </div>
+                  </div>
+                  
+                  <div className="project-card-footer">
+                    <div className="project-team-avatars">
+                      {project.team && project.team.members && project.team.members.slice(0, 3).map((member) => (
+                        <div key={member._id} className="member-avatar" title={member.name}>
+                          {member.name.charAt(0).toUpperCase()}
+                        </div>
+                      ))}
+                      {project.team && project.team.members && project.team.members.length > 3 && (
+                        <div className="member-avatar-more">
+                          +{project.team.members.length - 3}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {isOwner && (
+                    <FaTrash
+                      className="project-card-delete"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteHandler(project._id);
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })
           )}
         </div>
       )}

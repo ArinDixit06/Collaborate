@@ -1,0 +1,127 @@
+/* HomeScreen.css */
+
+:root {
+  --background-dark: #000000;
+  --text-primary-dark: #ffffff;
+  --text-secondary-dark: #888888;
+  --accent-color: #ffffff;
+  --border-color-dark: #333333;
+  --card-background-dark: #111111;
+  --button-text-dark: #000000;
+}
+
+.home-page {
+  background-color: var(--background-dark);
+  color: var(--text-primary-dark);
+  padding: 4rem 2rem;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.home-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 2%, transparent 20%),
+                    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 2%, transparent 20%);
+  background-size: 50px 50px;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-section {
+  padding: 4rem 0;
+}
+
+.hero-headline {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.1;
+  background: -webkit-linear-gradient(45deg, #ffffff, #888888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.hero-subheadline {
+  font-size: 1.25rem;
+  color: var(--text-secondary-dark);
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.cta-button {
+  background-color: var(--accent-color);
+  color: var(--button-text-dark);
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cta-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.features-section {
+  padding: 4rem 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.feature-card {
+  background-color: var(--card-background-dark);
+  border: 1px solid var(--border-color-dark);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.feature-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.feature-description {
+  font-size: 1rem;
+  color: var(--text-secondary-dark);
+}
+
+.final-cta-section {
+  padding: 4rem 0;
+}

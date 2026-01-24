@@ -4,23 +4,39 @@ import { createProject, createProjectWithAI } from '../actions/projectActions';
 import { listTeams } from '../actions/teamActions';
 import { FaTimes, FaMagic, FaPlus } from 'react-icons/fa';
 import './ProjectCreateModal.css';
+import Message from './Message';
+import Loader from './Loader';
 
 const ProjectCreateModal = ({ isOpen, onClose }) => {
   const [name, setName] = useState('');
   const [goal, setGoal] = useState('');
-  const [dueDate, setDueDate] = useState(''); // New state for dueDate
-  const [selectedTeam, setSelectedTeam] = useState(''); // New state for selectedTeam
+  const [dueDate, setDueDate] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
   const [isAiMode, setIsAiMode] = useState(false);
   const dispatch = useDispatch();
 
   const teamList = useSelector((state) => state.teamList);
-  const { teams = [] } = teamList;
+  const { teams = [], loading: loadingTeams, error: errorTeams } = teamList;
+
+  const projectCreate = useSelector((state) => state.projectCreate);
+  const { loading: loadingCreate, error: errorCreate, success: successCreate } = projectCreate;
 
   useEffect(() => {
     if (isOpen) {
       dispatch(listTeams());
+      setName('');
+      setGoal('');
+      setDueDate('');
+      setSelectedTeam('');
+      setIsAiMode(false);
     }
   }, [dispatch, isOpen]);
+
+  useEffect(() => {
+    if (successCreate && isOpen) {
+      onClose();
+    }
+  }, [successCreate, isOpen, onClose]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,30 +45,36 @@ const ProjectCreateModal = ({ isOpen, onClose }) => {
     } else {
       dispatch(createProject({ name }));
     }
-    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '550px' }}>
-        <button className="btn-icon modal-close-btn" onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', padding: '0.5rem' }}>
+    <div className="project-create-modal-overlay">
+      <div className="project-create-modal-content">
+        <button className="project-create-modal-close-btn" onClick={onClose}>
           <FaTimes />
         </button>
         
-        <div className="text-center mb-4">
-          <h2 style={{ fontWeight: '700', fontSize: '1.75rem', color: 'var(--text-high-emphasis)' }}>{isAiMode ? 'Create Project with AI' : 'Create New Project'}</h2>
-        </div>
+        <h2 className="project-create-modal-title">
+          {isAiMode ? 'Create Project with AI' : 'Create New Project'}
+        </h2>
 
-        <div className="modal-toggle" style={{ marginBottom: '2rem' }}>
+        {loadingCreate && <Loader />}
+        {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+        {loadingTeams && <Loader />}
+        {errorTeams && <Message variant="danger">{errorTeams}</Message>}
+
+        <div className="modal-toggle-buttons">
           <button
+            type="button"
             className={`toggle-btn ${!isAiMode ? 'active' : ''}`}
             onClick={() => setIsAiMode(false)}
           >
             <FaPlus /> Manual
           </button>
           <button
+            type="button"
             className={`toggle-btn ${isAiMode ? 'active' : ''}`}
             onClick={() => setIsAiMode(true)}
           >
@@ -60,47 +82,45 @@ const ProjectCreateModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group floating-label">
+        <form onSubmit={handleSubmit} className="project-create-modal-form">
+          <div className="form-group">
+            <label htmlFor="projectName" className="form-label">Project Name*</label>
             <input
               type="text"
               id="projectName"
               className="form-input"
-              placeholder=" "
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
-            <label htmlFor="projectName">Project Name*</label>
           </div>
           {isAiMode && (
             <>
-              <div className="form-group floating-label">
+              <div className="form-group">
+                <label htmlFor="projectGoal" className="form-label">Project Goal*</label>
                 <textarea
                   id="projectGoal"
                   className="form-input"
-                  placeholder=" "
                   value={goal}
                   onChange={(e) => setGoal(e.target.value)}
-                  rows={4}
+                  rows="4"
                   required
                 ></textarea>
-                <label htmlFor="projectGoal">Project Goal*</label>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div className="form-group floating-label">
+                <div className="form-group">
+                  <label htmlFor="dueDate" className="form-label">Due Date</label>
                   <input
                     type="date"
                     id="dueDate"
                     className="form-input"
-                    placeholder=" "
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
                   />
-                  <label htmlFor="dueDate">Due Date</label>
                 </div>
-                <div className="form-group floating-label">
+                <div className="form-group">
+                  <label htmlFor="selectedTeam" className="form-label">Assign Team</label>
                   <select
                     id="selectedTeam"
                     value={selectedTeam}
@@ -114,16 +134,15 @@ const ProjectCreateModal = ({ isOpen, onClose }) => {
                       </option>
                     ))}
                   </select>
-                  <label htmlFor="selectedTeam">Assign Team</label>
                 </div>
               </div>
             </>
           )}
-          <div className="form-actions" style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-            <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
+          <div className="project-create-modal-form-actions">
+            <button type="submit" className="btn btn-primary">
               {isAiMode ? 'Generate Project' : 'Create Project'}
             </button>
-            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ flex: 1 }}>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
               Cancel
             </button>
           </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './TaskSideDrawer.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTask, getTaskDetails, createTask } from '../actions/taskActions';
 import { TASK_UPDATE_RESET, TASK_CREATE_RESET } from '../constants/taskConstants';
@@ -93,7 +94,7 @@ const TaskSideDrawer = ({ taskId, projectId, isCreatingTask, onClose }) => {
       <div className="side-drawer-content">
         <div className="side-drawer-header">
           <h2 className="drawer-title">{isCreatingTask ? 'Create New Task' : 'Edit Task'}</h2>
-          <button className="btn-icon drawer-close-button" onClick={onClose}>
+          <button className="drawer-close-button" onClick={onClose}>
             <FaTimes />
           </button>
         </div>

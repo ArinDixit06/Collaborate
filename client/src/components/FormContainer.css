@@ -1,0 +1,33 @@
+/*
+* FORMCONTAINER.CSS
+*
+* This file contains the styles for the FormContainer component, a reusable
+* wrapper for forms throughout the application.
+*/
+
+.form-container {
+  width: 100%;
+  max-width: 600px; /* Default max-width for forms */
+  margin: 2rem auto;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.form-subtitle {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from './components/Sidebar';
@@ -17,12 +17,19 @@ import { SERVER_STATUS_OFFLINE } from './constants/serverConstants';
 const App = () => {
   const serverStatus = useSelector((state) => state.serverStatus);
   const { status } = serverStatus;
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const handleCollapseChange = (collapsed) => {
+    setIsSidebarCollapsed(collapsed);
+  };
+
+  const mainContentClass = `main-content ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`;
 
   return (
     <Router>
       <div className="app-layout">
-        <Sidebar />
-        <div className="main-content">
+        <Sidebar onCollapseChange={handleCollapseChange} />
+        <div className={mainContentClass}>
           {status === SERVER_STATUS_OFFLINE && (
             <div className="server-status-message">
               Server is currently offline. It usually takes about a minute to start up. Please wait...

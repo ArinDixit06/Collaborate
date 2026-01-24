@@ -1,74 +1,86 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import './Sidebar.css';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/userActions';
-import { FaBars, FaTimes, FaTachometerAlt, FaFolder, FaUsers, FaTasks, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { 
+  FaTachometerAlt, 
+  FaFolder, 
+  FaUsers, 
+  FaTasks, 
+  FaCog, 
+  FaSignOutAlt,
+  FaChevronLeft,
+  FaChevronRight,
+  FaTh
+} from 'react-icons/fa';
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true); // State to control sidebar collapse
+const Sidebar = ({ onCollapseChange }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    onCollapseChange(isCollapsed);
+  }, [isCollapsed, onCollapseChange]);
 
   const logoutHandler = () => {
     dispatch(logout());
     navigate('/login');
   };
 
+  const getNavLinkClass = ({ isActive }) => {
+    return isActive ? 'nav-item active' : 'nav-item';
+  };
+
   return (
-    <div className={`sidebar ${isOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+    <div className={`sidebar ${isCollapsed ? 'collapsed' : 'expanded'}`}>
       <div className="sidebar-header">
-        <button className="sidebar-toggle" onClick={toggleSidebar}>
-          {isOpen ? <FaTimes /> : <FaBars />}
-        </button>
-        {isOpen && <h2 className="app-title">Collaborate</h2>}
+        <FaTh className="logo-icon" />
+        <h1 className="logo-text">UniSync</h1>
       </div>
 
       <nav className="sidebar-nav">
-        <Link to="/" className="nav-item">
-          <FaTachometerAlt />
-          {isOpen && <span className="nav-text">Dashboard</span>}
-        </Link>
-        <Link to="/projects/ongoing" className="nav-item">
-          <FaFolder />
-          {isOpen && <span className="nav-text">Projects</span>}
-        </Link>
-        <Link to="/teams" className="nav-item">
-          <FaUsers />
-          {isOpen && <span className="nav-text">Teams</span>}
-        </Link>
-        <Link to="/tasks" className="nav-item">
-          <FaTasks />
-          {isOpen && <span className="nav-text">Tasks</span>}
-        </Link>
-        <Link to="/settings" className="nav-item">
-          <FaCog />
-          {isOpen && <span className="nav-text">Settings</span>}
-        </Link>
+        <NavLink to="/" end className={getNavLinkClass}>
+          <FaTachometerAlt className="nav-icon" />
+          <span className="nav-text">Dashboard</span>
+        </NavLink>
+        <NavLink to="/projects/ongoing" className={getNavLinkClass}>
+          <FaFolder className="nav-icon" />
+          <span className="nav-text">Projects</span>
+        </NavLink>
+        <NavLink to="/teams" className={getNavLinkClass}>
+          <FaUsers className="nav-icon" />
+          <span className="nav-text">Teams</span>
+        </NavLink>
+        <NavLink to="/tasks" className={getNavLinkClass}>
+          <FaTasks className="nav-icon" />
+          <span className="nav-text">My Tasks</span>
+        </NavLink>
       </nav>
 
-      {userInfo && (
-        <div className="sidebar-footer">
-          {isOpen && (
-            <div className="user-profile">
-              <div className="user-avatar">
-                {userInfo.name.charAt(0).toUpperCase()}
-              </div>
+      <div className="sidebar-footer">
+        {userInfo && (
+          <div className="user-profile">
+            <div className="user-avatar">{userInfo.name.charAt(0).toUpperCase()}</div>
+            <div className="user-details">
               <span className="user-name">{userInfo.name}</span>
+              <span className="user-email">{userInfo.email}</span>
             </div>
-          )}
-          <button className="logout-button" onClick={logoutHandler}>
-            <FaSignOutAlt />
-            {isOpen && <span className="logout-text">Logout</span>}
-          </button>
-        </div>
-      )}
+          </div>
+        )}
+        <button className="logout-btn" onClick={logoutHandler}>
+          <FaSignOutAlt className="nav-icon" />
+          <span className="nav-text">Logout</span>
+        </button>
+        <button className="collapse-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
+          {isCollapsed ? <FaChevronRight className="nav-icon" /> : <FaChevronLeft className="nav-icon" />}
+          <span className="nav-text">Collapse</span>
+        </button>
+      </div>
     </div>
   );
 };
