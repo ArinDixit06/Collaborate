@@ -1,11 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { thunk } from 'redux-thunk'; // Use named import
+import { thunk } from 'redux-thunk';
 import { composeWithDevTools } from '@redux-devtools/extension';
+import { persistReducer } from 'redux-persist'; // 1. Import persistReducer
+import storage from 'redux-persist/lib/storage'; // 2. Import default storage (localStorage)
+
 import {
   userLoginReducer,
   userRegisterReducer,
   userListReducer,
-  userDetailsReducer, // Import userDetailsReducer
+  userDetailsReducer,
 } from './reducers/userReducers';
 import { serverStatusReducer } from './reducers/serverReducers';
 
@@ -24,13 +27,29 @@ import {
   taskDetailsReducer,
   taskDeleteReducer,
 } from './reducers/taskReducers';
-import { projectCreateWithAIReducer, projectDetailsReducer, projectListReducer, projectDeleteReducer, projectCreateReducer, projectUpdateReducer } from './reducers/projectReducers';
+import { 
+  projectCreateWithAIReducer, 
+  projectDetailsReducer, 
+  projectListReducer, 
+  projectDeleteReducer, 
+  projectCreateReducer, 
+  projectUpdateReducer 
+} from './reducers/projectReducers';
 
-const reducer = combineReducers({
+// 3. Define the Persist Configuration
+const persistConfig = {
+  key: 'root',
+  storage,
+  // IMPORTANT: We only whitelist 'userLogin' so the user stays logged in.
+  // We usually don't persist lists (like 'taskList') because we want fresh data from the server.
+  whitelist: ['userLogin'], 
+};
+
+const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userList: userListReducer,
-  userDetails: userDetailsReducer, // Add userDetailsReducer
+  userDetails: userDetailsReducer,
   teamList: teamListReducer,
   teamCreate: teamCreateReducer,
   teamJoin: teamJoinReducer,
@@ -51,19 +70,15 @@ const reducer = combineReducers({
   serverStatus: serverStatusReducer,
 });
 
-const userInfoFromStorage = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo'))
-  : null;
+// 4. Wrap your root reducer with the persist function
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const initialState = {
-  userLogin: { userInfo: userInfoFromStorage },
-};
+const middleware = [thunk];
 
-const middleware = [thunk]; // Use the named import 'thunk'
-
+// 5. Create the store using the persistedReducer
+// Note: We removed 'initialState' because redux-persist handles rehydration now.
 const store = createStore(
-  reducer,
-  initialState,
+  persistedReducer,
   composeWithDevTools(applyMiddleware(...middleware))
 );
 
