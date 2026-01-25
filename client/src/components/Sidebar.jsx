@@ -3,7 +3,7 @@ import './Sidebar.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/userActions';
-import { FaBars, FaTimes, FaTachometerAlt, FaFolder, FaUsers, FaTasks, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars, FaTimes, FaTachometerAlt, FaFolder, FaUsers, FaTasks, FaCog, FaSignOutAlt, FaUser } from 'react-icons/fa';
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const dispatch = useDispatch();
@@ -51,6 +51,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <FaTasks />
           <span className="nav-text">Tasks</span>
           {!isSidebarOpen && <span className="tooltip">Tasks</span>}
+        </NavLink>
+        <NavLink to="/profile" className={getNavLinkClass}>
+          <FaUser />
+          <span className="nav-text">Profile</span>
+          {!isSidebarOpen && <span className="tooltip">Profile</span>}
         </NavLink>
         <NavLink to="/settings" className={getNavLinkClass}>
           <FaCog />
