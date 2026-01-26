@@ -5,7 +5,8 @@ import axios from "axios";
 import io from "socket.io-client";
 import { FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 
-const peerConnections = {}; // Global object to track connections outside renders
+// Global object to track connections outside React renders
+const peerConnections = {}; 
 
 const MeetingScreen = () => {
   const { id } = useParams();
@@ -26,13 +27,13 @@ const MeetingScreen = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
 
-  // Audio Analysis Refs
+  // Audio Analysis
   const [speakingUsers, setSpeakingUsers] = useState({});
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const localSourceRef = useRef(null);
 
-  // Socket Ref
+  // Refs
   const socketRef = useRef(null);
   const localVideoRef = useRef();
 
@@ -51,7 +52,6 @@ const MeetingScreen = () => {
         setMeeting(data);
       } catch (err) {
         console.error("Failed to fetch meeting", err);
-        // navigate(`/team/${id}`); // Uncomment if you want strict redirection
       }
     };
     fetchMeeting();
@@ -71,8 +71,10 @@ const MeetingScreen = () => {
 
       // 2. Close WebRTC Connections
       Object.keys(peerConnections).forEach((key) => {
-        peerConnections[key].close();
-        delete peerConnections[key];
+        if (peerConnections[key]) {
+            peerConnections[key].close();
+            delete peerConnections[key];
+        }
       });
 
       // 3. Stop Local Media
@@ -106,12 +108,20 @@ const MeetingScreen = () => {
   }, []);
 
   /* =====================================
-     3. SOCKET SETUP
+     3. SOCKET SETUP (Render Link Added)
   ===================================== */
   useEffect(() => {
-    const newSocket = io(
-      process.env.NODE_ENV === "production" ? "" : "http://localhost:3002"
-    );
+    console.log("Initializing socket connection...");
+
+    // *** THIS IS THE CRITICAL FIX FOR PRODUCTION ***
+    const BACKEND_URL = process.env.NODE_ENV === "production" 
+        ? "https://collaborate-arin.onrender.com" 
+        : "http://localhost:3002";
+
+    const newSocket = io(BACKEND_URL, {
+        transports: ['websocket'], // Required for Render to avoid polling errors
+    });
+
     socketRef.current = newSocket;
 
     const onParticipantsUpdated = (updatedParticipants) => {
@@ -155,6 +165,7 @@ const MeetingScreen = () => {
       const socket = socketRef.current;
       
       const joinRoom = () => {
+        console.log("Socket Connected, Joining Room:", id);
         socket.emit("joinTeamRoom", id);
         socket.emit("userJoined", {
           teamId: id,
@@ -170,7 +181,7 @@ const MeetingScreen = () => {
   }, [id, localStream]);
 
   /* =====================================
-     5. WEBRTC LOGIC (The Core Fix)
+     5. WEBRTC LOGIC (Fixed)
   ===================================== */
   useEffect(() => {
     if (!socketRef.current || !localStream) return;
@@ -183,7 +194,10 @@ const MeetingScreen = () => {
       console.log(`Creating PeerConnection for ${targetUserId}`);
       
       const pc = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+        ]
       });
 
       // Add local tracks
@@ -203,7 +217,7 @@ const MeetingScreen = () => {
         }
       };
 
-      // Handle Remote Stream (VIDEO VISIBILITY FIX)
+      // Handle Remote Stream
       pc.ontrack = (e) => {
         console.log(`Received track from ${targetUserId}`);
         setRemoteStreams((prev) => {
@@ -220,7 +234,6 @@ const MeetingScreen = () => {
     // --- HANDLERS ---
 
     const onOtherUsers = (users) => {
-      // Users is array of { userId, socketId }
       users.forEach((user) => {
         const pc = createPeerConnection(user.userId, user.socketId);
         pc.createOffer()
@@ -263,7 +276,6 @@ const MeetingScreen = () => {
       }
     };
 
-    // FIX: Added missing ICE handler
     const onIceCandidate = async (payload) => {
       const pc = peerConnections[payload.senderUserId];
       if (pc && payload.candidate) {
@@ -286,7 +298,7 @@ const MeetingScreen = () => {
       socket.off("answer", onAnswer);
       socket.off("ice-candidate", onIceCandidate);
     };
-  }, [localStream, id]); // FIX: Dependency on localStream (state), not Ref
+  }, [localStream, id]); // Depend on localStream (state), not Ref
 
   /* =====================================
      6. AUDIO ANALYSER HELPERs
@@ -341,7 +353,9 @@ const MeetingScreen = () => {
     const track = localStreamRef.current.getVideoTracks()[0];
     track.enabled = !track.enabled;
     setIsCameraOn(track.enabled);
-    socketRef.current.emit("toggle-camera", { userId: userInfo._id, cameraOn: track.enabled });
+    if(socketRef.current) {
+        socketRef.current.emit("toggle-camera", { userId: userInfo._id, cameraOn: track.enabled });
+    }
   };
 
   const toggleMic = () => {
@@ -349,7 +363,9 @@ const MeetingScreen = () => {
     const track = localStreamRef.current.getAudioTracks()[0];
     track.enabled = !track.enabled;
     setIsMicOn(track.enabled);
-    socketRef.current.emit("toggle-mic", { userId: userInfo._id, micOn: track.enabled });
+    if(socketRef.current) {
+        socketRef.current.emit("toggle-mic", { userId: userInfo._id, micOn: track.enabled });
+    }
   };
 
   const leaveMeetingHandler = () => {
@@ -428,7 +444,3 @@ const MeetingScreen = () => {
 };
 
 export default MeetingScreen;
-
-/* KEEP YOUR CSS BELOW AS IS 
-   (Copy the CSS from your previous message here)
-*/
