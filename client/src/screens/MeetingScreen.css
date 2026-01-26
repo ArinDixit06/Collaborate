@@ -1,59 +1,49 @@
 /* =========================================
-   MEETING UI – STABLE PRO VERSION
+   THEME: APPLE x GOOGLE MEET (Cupertino Dark)
    ========================================= */
 
 :root {
-  /* Background */
-  --bg-main: #0f1115;
-  --bg-surface: rgba(28, 28, 30, 0.95);
+  /* Apple System Colors (Dark Mode) */
+  --app-bg: #000000;
+  --app-surface: #1c1c1e;
+  
+  /* Glassmorphism Variables */
+  --glass-material: rgba(28, 28, 30, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  
+  /* Functional Colors */
+  --ios-blue: #0a84ff;
+  --ios-green: #30d158;
+  --ios-red: #ff453a;
+  --text-primary: #ffffff;
+  --text-secondary: #ebebf599; /* 60% opacity white */
 
-  /* Glass */
-  --glass: rgba(255, 255, 255, 0.06);
-
-  /* Borders */
-  --border: rgba(255, 255, 255, 0.12);
-
-  /* Text */
-  --text-main: #ffffff;
-  --text-sub: #b0b0b5;
-
-  /* Accent */
-  --blue: #0a84ff;
-  --green: #30d158;
-  --red: #ff453a;
-
-  /* Radius */
-  --radius-lg: 16px;
-
-  /* Shadow */
-  --shadow-soft: 0 6px 24px rgba(0, 0, 0, 0.5);
+  /* Spacing & Radius */
+  --radius-xl: 24px;   /* For container corners */
+  --radius-md: 16px;   /* For video tiles */
+  --radius-pill: 100px; /* For buttons */
+  
+  --dock-height: 80px;
 }
 
 /* =========================================
-   RESET
+   RESET & TYPOGRAPHY
    ========================================= */
 
-*,
-*::before,
-*::after {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* IMPORTANT: allow scroll */
 body {
-  background: var(--bg-main);
-
-  font-family: -apple-system, BlinkMacSystemFont,
-    "SF Pro Display", "Inter", system-ui, sans-serif;
-
-  color: var(--text-main);
-
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  height: 100vh;
+  background: var(--app-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+  color: var(--text-primary);
+  overflow: hidden; /* Prevent body scroll */
 }
 
 /* =========================================
@@ -62,374 +52,290 @@ body {
 
 .meeting-screen-container {
   height: 100vh;
-  width: 100%;
-
+  width: 100vw;
   display: flex;
   flex-direction: column;
-
-  background: radial-gradient(
-    circle at top,
-    #1c1f26,
-    #0f1115 70%
-  );
-
-  overflow: hidden;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  position: relative;
 }
 
 /* =========================================
-   HEADER
+   HEADER (Floating Island Style)
    ========================================= */
 
 .meeting-header {
-  padding: 1rem 1.5rem;
-
-  text-align: center;
-
-  background: var(--bg-surface);
-  backdrop-filter: blur(20px);
-
-  border-bottom: 1px solid var(--border);
-
-  flex-shrink: 0;
-
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
   z-index: 10;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  
+  /* Transparent gradient fade */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
 }
 
 .meeting-header h1 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  opacity: 0.9;
 }
 
 .meeting-header p {
-  font-size: 0.85rem;
-  color: var(--text-sub);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums; /* Better for IDs */
 }
 
 /* =========================================
-   VIDEO GRID
+   VIDEO GRID (Adaptive Mosaic)
    ========================================= */
 
 .video-grid-container {
   flex: 1;
-
-  min-height: 0; /* VERY IMPORTANT */
-
-  padding: 1rem;
-
   display: grid;
-
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(240px, 1fr)
-  );
-
-  grid-auto-rows: 1fr;
-
-  gap: 14px;
-
-  place-items: stretch;
-
+  padding: 20px;
+  padding-top: 70px; /* Space for header */
+  padding-bottom: calc(var(--dock-height) + 20px); /* Space for dock */
+  gap: 16px;
+  
+  /* Smart Responsive Grid */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: minmax(200px, 1fr);
+  align-content: center;
+  
   overflow-y: auto;
-
-  position: relative;
-  z-index: 1;
 }
 
-/* Scrollbar */
+/* Scrollbar hiding for cleaner look */
 .video-grid-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.video-grid-container::-webkit-scrollbar-thumb {
-  background: var(--glass);
-  border-radius: 20px;
+  display: none;
 }
 
 /* =========================================
-   PARTICIPANT TILE
+   VIDEO TILE (The "Card")
    ========================================= */
 
 .video-participant-container {
   position: relative;
-
   width: 100%;
   height: 100%;
-
-  min-height: 180px;
-
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.02)
-  );
-
-  border-radius: var(--radius-lg);
-
+  background: var(--app-surface);
+  border-radius: var(--radius-md);
   overflow: hidden;
-
-  border: 1px solid var(--border);
-
-  box-shadow: var(--shadow-soft);
-
-  display: flex;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
-  z-index: 2;
+  
+  /* Subtle border for definition */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08); 
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
-/* Hover */
-.video-participant-container:hover {
-  transform: translateY(-2px);
-}
-
-/* =========================================
-   VIDEO
-   ========================================= */
 
 .video-participant-container video {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
-  background: black;
-
-  display: block;
+  transform: scale(1.02); /* Slight zoom to avoid black edges */
+  transition: opacity 0.3s ease;
 }
 
 /* =========================================
-   NAME LABEL
+   VIDEO OVERLAYS (Name & Icons)
    ========================================= */
 
+/* The "Pill" Name Tag */
 .participant-name {
   position: absolute;
-
-  bottom: 8px;
-  left: 8px;
-
-  padding: 5px 12px;
-
-  font-size: 0.8rem;
-  font-weight: 500;
-
-  background: rgba(0, 0, 0, 0.6);
-
-  border-radius: 999px;
-
-  color: white;
-
-  backdrop-filter: blur(8px);
-
-  z-index: 5;
-
+  bottom: 12px;
+  left: 12px;
+  
   display: flex;
   align-items: center;
+  gap: 8px;
+  
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  
+  /* Prevent text selection */
+  user-select: none;
+  z-index: 5;
+}
+
+/* Small icons inside the name tag */
+.media-status-icons {
+  display: flex;
   gap: 6px;
+  opacity: 0.7;
+}
+
+/* Big center icon when camera is off */
+.video-overlay-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--app-surface);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.hidden-video {
+  opacity: 0;
 }
 
 /* =========================================
-   ACTIVE SPEAKER
+   ACTIVE SPEAKER (The "Apple Glow")
    ========================================= */
 
 .video-participant-container.speaking {
-  border: 2px solid var(--green);
-
-  box-shadow:
-    0 0 0 2px rgba(48, 209, 88, 0.3),
-    0 0 22px rgba(48, 209, 88, 0.6);
-
-  animation: speakerPulse 1.5s infinite ease-in-out;
+  /* No harsh borders - use Glow */
+  box-shadow: 
+    0 0 0 2px var(--ios-green), /* Inner defining ring */
+    0 0 30px rgba(48, 209, 88, 0.25); /* Outer soft glow */
+  border-color: transparent;
+  z-index: 2; /* Bring to front */
 }
 
-/* Wave ring */
-.video-participant-container.speaking::after {
-  content: "";
-
-  position: absolute;
-  inset: -6px;
-
-  border-radius: inherit;
-
-  border: 2px solid rgba(48, 209, 88, 0.6);
-
-  animation: speakerWave 1.5s infinite ease-out;
-
-  pointer-events: none;
-}
-
-/* Disable blocking overlay */
-.video-participant-container.speaking::before {
-  pointer-events: none;
+/* Optional: Subtle pulse on the name tag when speaking */
+.video-participant-container.speaking .participant-name {
+  background: rgba(48, 209, 88, 0.2);
+  border: 1px solid rgba(48, 209, 88, 0.3);
 }
 
 /* =========================================
-   SPEAKER ANIMATIONS
-   ========================================= */
-
-@keyframes speakerPulse {
-  0% {
-    box-shadow:
-      0 0 0 2px rgba(48, 209, 88, 0.2),
-      0 0 14px rgba(48, 209, 88, 0.4);
-  }
-
-  50% {
-    box-shadow:
-      0 0 0 4px rgba(48, 209, 88, 0.4),
-      0 0 28px rgba(48, 209, 88, 0.8);
-  }
-
-  100% {
-    box-shadow:
-      0 0 0 2px rgba(48, 209, 88, 0.2),
-      0 0 14px rgba(48, 209, 88, 0.4);
-  }
-}
-
-@keyframes speakerWave {
-  from {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(1.15);
-  }
-}
-
-/* =========================================
-   CONTROLS
+   CONTROLS (The "Dock")
    ========================================= */
 
 .meeting-controls {
-  padding: 0.9rem 1rem;
-
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  
   display: flex;
-  justify-content: center;
-
-  gap: 0.8rem;
-
-  background: var(--bg-surface);
-
-  backdrop-filter: blur(22px);
-
-  border-top: 1px solid var(--border);
-
-  flex-shrink: 0;
-
-  z-index: 10;
+  align-items: center;
+  gap: 12px;
+  
+  padding: 12px 16px;
+  
+  /* Frosted Glass Dock */
+  background: var(--glass-material);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
 /* =========================================
-   BUTTONS
+   BUTTONS (iOS Style)
    ========================================= */
 
 .btn {
-  min-width: 120px;
-
-  padding: 0.6rem 1.1rem;
-
-  font-size: 0.85rem;
-  font-weight: 500;
-
-  border-radius: 999px;
-
-  border: 1px solid var(--border);
-
-  background: var(--glass);
-
-  color: white;
-
+  border: none;
+  outline: none;
   cursor: pointer;
-
-  transition: all 0.2s ease;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  
+  /* Sizing */
+  height: 48px;
+  padding: 0 24px;
+  min-width: 140px; /* Accommodate text */
+  
+  /* Typography */
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  
+  /* Shape & Color */
+  border-radius: var(--radius-pill);
+  background: rgba(60, 60, 65, 0.6); /* System Gray 5 */
+  color: var(--text-primary);
+  
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+/* Hover State */
 .btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(80, 80, 85, 0.8);
+  transform: translateY(-2px);
 }
 
+/* Active/Click State */
 .btn:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
-/* Primary */
-.btn:not(.btn-danger) {
-  border-color: rgba(10, 132, 255, 0.4);
-}
+/* Primary/Active Toggle State (Blue) */
+/* Note: You might need to add logic in JSX to change class based on state 
+   But for now, standard buttons look "off" (grey). 
+   We will make the "On" state standard grey, and specific colors for actions.
+*/
 
-/* Leave */
+/* Leave Meeting Button (Red) */
 .btn-danger {
-  background: rgba(255, 69, 58, 0.22);
-  border-color: rgba(255, 69, 58, 0.5);
-  color: var(--red);
+  background: rgba(255, 69, 58, 0.15);
+  color: var(--ios-red);
 }
 
 .btn-danger:hover {
-  background: rgba(255, 69, 58, 0.4);
+  background: var(--ios-red);
   color: white;
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.4);
 }
 
 /* =========================================
-   VIDEO STATES
-   ========================================= */
-
-.hidden-video {
-  display: none;
-}
-
-/* Camera off overlay */
-.video-overlay-icon {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--text-sub);
-
-  background: rgba(0, 0, 0, 0.35);
-
-  backdrop-filter: blur(6px);
-
-  z-index: 4;
-}
-
-.media-status-icons {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-
-  margin-left: 6px;
-}
-
-/* =========================================
-   MOBILE
+   MOBILE RESPONSIVENESS
    ========================================= */
 
 @media (max-width: 768px) {
-
+  .meeting-header {
+    padding: 0 16px;
+  }
+  
   .video-grid-container {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    padding: 10px;
+    padding-top: 60px;
+    padding-bottom: 100px;
+    grid-template-columns: 1fr; /* Stack vertically on phone */
+    grid-auto-rows: 250px;
   }
-
+  
+  .meeting-controls {
+    width: 90%;
+    bottom: 20px;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  
   .btn {
-    min-width: 100px;
-    font-size: 0.8rem;
+    min-width: auto;
+    flex: 1;
+    font-size: 0.75rem;
+    padding: 0 12px;
+    height: 44px;
   }
-
-  .meeting-header h1 {
-    font-size: 1.15rem;
-  }
-
 }
