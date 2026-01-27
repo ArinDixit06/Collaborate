@@ -1,24 +1,27 @@
 /* =========================================
-   GOOGLE MEET + ACTIVE SPEAKER EFFECT
+   FACETIME AESTHETIC + ACTIVE SPEAKER
    ========================================= */
 
 :root {
-  --bg-main: #0f1115;
-  --bg-surface: rgba(28, 28, 30, 0.9);
-
-  --glass: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.12);
+  /* iOS System Colors */
+  --bg-main: #000000;
+  --bg-surface: rgba(28, 28, 30, 0.65); /* More transparent for glass effect */
+  
+  /* Apple-style borders are barely visible */
+  --glass: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.08);
 
   --text-main: #ffffff;
-  --text-sub: #b0b0b5;
+  --text-sub: #8e8e93; /* iOS System Gray */
 
+  /* iOS Active Colors */
   --blue: #0a84ff;
-  --green: #30d158;
-  --red: #ff453a;
+  --green: #30d158; /* iOS Green */
+  --red: #ff453a;   /* iOS Red */
 
-  --radius-lg: 18px;
-
-  --shadow-soft: 0 6px 24px rgba(0, 0, 0, 0.5);
+  --radius-lg: 24px; /* Larger radius for that "Squircle" look */
+  
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.8);
 }
 
 /* =========================================
@@ -33,9 +36,9 @@
 
 body {
   background: var(--bg-main);
-  font-family: -apple-system, BlinkMacSystemFont,
-    "SF Pro Display", "Inter", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
   color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* =========================================
@@ -45,16 +48,10 @@ body {
 .meeting-screen-container {
   height: 100vh;
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
-  background: radial-gradient(
-    circle at top,
-    #1c1f26,
-    #0f1115 70%
-  );
-
+  /* iOS Dark Mode Gradient */
+  background: linear-gradient(180deg, #1c1c1e 0%, #000000 40%);
   overflow: hidden;
 }
 
@@ -63,23 +60,26 @@ body {
    ========================================= */
 
 .meeting-header {
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   text-align: center;
-
-  background: var(--bg-surface);
-  backdrop-filter: blur(20px);
-
-  border-bottom: 1px solid var(--border);
+  /* Heavy blur for glass header */
+  background: rgba(20, 20, 20, 0.5); 
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 10;
 }
 
 .meeting-header h1 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .meeting-header p {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-sub);
+  margin-top: 4px;
 }
 
 /* =========================================
@@ -88,22 +88,12 @@ body {
 
 .video-grid-container {
   flex: 1;
-
-  padding: 1rem;
-
+  padding: 1.5rem; /* More breathing room like FaceTime */
   display: grid;
-
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(240px, 1fr)
-  );
-
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   grid-auto-rows: 1fr;
-
-  gap: 12px;
-
+  gap: 16px; /* Wider gaps */
   place-items: stretch;
-
   overflow-y: auto;
 }
 
@@ -113,27 +103,17 @@ body {
 
 .video-participant-container {
   position: relative;
-
   width: 100%;
   height: 100%;
-
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.02)
-  );
-
+  /* Darker tile background */
+  background: #1c1c1e; 
   border-radius: var(--radius-lg);
-
   overflow: hidden;
-
-  border: 1px solid var(--border);
-
-  box-shadow: var(--shadow-soft);
-
+  /* Removed default light border for a cleaner look */
+  border: 1px solid rgba(255, 255, 255, 0.0); 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
-
-  transition: transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* =========================================
@@ -143,10 +123,10 @@ body {
 .video-participant-container video {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
-  background: black;
+  background: #000;
+  /* Slight opacity on video to blend with dark theme until loaded */
+  opacity: 0.98; 
 }
 
 /* =========================================
@@ -155,23 +135,20 @@ body {
 
 .participant-name {
   position: absolute;
-
-  bottom: 8px;
-  left: 8px;
-
-  padding: 4px 10px;
-
-  font-size: 0.8rem;
-  font-weight: 500;
-
-  background: rgba(0, 0, 0, 0.55);
-
+  bottom: 12px;
+  left: 12px;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  /* Frosted Glass Pill */
+  background: rgba(50, 50, 50, 0.6); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
-
   color: white;
-
-  backdrop-filter: blur(8px);
-
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   z-index: 2;
 }
 
@@ -179,63 +156,55 @@ body {
    ACTIVE SPEAKER EFFECT
    ========================================= */
 
-/* Glow Border */
+/* Glow Border - Smoother transition */
 .video-participant-container.speaking {
+  /* iOS Green Border */
   border: 2px solid var(--green);
-  box-shadow:
-    0 0 0 2px rgba(48, 209, 88, 0.3),
-    0 0 25px rgba(48, 209, 88, 0.6);
-
-  animation: speakerPulse 1.5s infinite ease-in-out;
+  /* Brighter, softer glow */
+  box-shadow: 
+    0 0 0 2px rgba(48, 209, 88, 0.1), 
+    0 10px 40px rgba(48, 209, 88, 0.3); 
+  transform: scale(1.02); /* Subtle pop forward */
+  z-index: 5;
+  animation: speakerPulse 2s infinite ease-in-out;
 }
 
 /* Wave Ring */
 .video-participant-container.speaking::after {
   content: "";
-
   position: absolute;
-  inset: -6px;
-
-  border-radius: inherit;
-
-  border: 2px solid rgba(48, 209, 88, 0.7);
-
-  animation: speakerWave 1.5s infinite ease-out;
-
+  inset: -4px;
+  border-radius: calc(var(--radius-lg) + 4px);
+  border: 2px solid rgba(48, 209, 88, 0.5);
+  animation: speakerWave 2s infinite cubic-bezier(0, 0, 0.2, 1);
   pointer-events: none;
+  z-index: -1;
 }
 
-/* Pulse */
+/* Smoother Pulse */
 @keyframes speakerPulse {
   0% {
-    box-shadow:
-      0 0 0 2px rgba(48, 209, 88, 0.2),
-      0 0 15px rgba(48, 209, 88, 0.4);
+    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.4);
   }
-
-  50% {
-    box-shadow:
-      0 0 0 4px rgba(48, 209, 88, 0.4),
-      0 0 35px rgba(48, 209, 88, 0.8);
+  70% {
+    box-shadow: 0 0 0 10px rgba(48, 209, 88, 0);
   }
-
   100% {
-    box-shadow:
-      0 0 0 2px rgba(48, 209, 88, 0.2),
-      0 0 15px rgba(48, 209, 88, 0.4);
+    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0);
   }
 }
 
-/* Expanding Ring */
+/* Smoother Wave */
 @keyframes speakerWave {
   0% {
-    opacity: 0.8;
+    opacity: 0.6;
     transform: scale(1);
+    border-width: 2px;
   }
-
   100% {
     opacity: 0;
-    transform: scale(1.15);
+    transform: scale(1.1);
+    border-width: 0px;
   }
 }
 
@@ -244,17 +213,17 @@ body {
    ========================================= */
 
 .meeting-controls {
-  padding: 0.8rem 1rem;
-
+  padding: 1.2rem 1rem; /* Taller footer */
   display: flex;
   justify-content: center;
-  gap: 0.8rem;
-
-  background: var(--bg-surface);
-
-  backdrop-filter: blur(25px);
-
-  border-top: 1px solid var(--border);
+  gap: 1rem;
+  /* Floating Glass Effect */
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  /* Added nice bottom spacing for larger screens */
+  padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
 }
 
 /* =========================================
@@ -263,54 +232,59 @@ body {
 
 .btn {
   min-width: 120px;
-
-  padding: 0.6rem 1.1rem;
-
-  font-size: 0.85rem;
-  font-weight: 500;
-
+  height: 48px; /* Taller, more touch-friendly */
+  padding: 0 1.5rem;
+  
+  font-size: 0.9rem;
+  font-weight: 600;
+  
   border-radius: 999px;
-
-  border: 1px solid var(--border);
-
-  background: var(--glass);
-
+  /* Remove border for cleaner look, use background only */
+  border: none; 
+  
+  /* iOS Control Center Grey */
+  background: rgba(255, 255, 255, 0.15); 
   color: white;
-
+  
   cursor: pointer;
-
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .btn:active {
-  transform: scale(0.96);
+  transform: scale(0.96) translateY(0);
 }
 
 /* =========================================
-   PRIMARY
+   PRIMARY ACTIONS
    ========================================= */
 
-.btn:not(.btn-danger) {
-  border-color: rgba(10, 132, 255, 0.4);
-}
+/* Default button is already styled above as neutral/secondary. 
+   If you have specific primary buttons, you can add a class, 
+   but keeping them neutral is very "Apple" */
 
 /* =========================================
-   LEAVE
+   LEAVE BUTTON
    ========================================= */
 
 .btn-danger {
-  background: rgba(255, 69, 58, 0.2);
-  border-color: rgba(255, 69, 58, 0.5);
-  color: #ff453a;
+  /* Solid Red like iOS End Call */
+  background: var(--red);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 69, 58, 0.3);
 }
 
 .btn-danger:hover {
-  background: rgba(255, 69, 58, 0.35);
-  color: white;
+  background: #ff3b30; /* Brighter red on hover */
+  box-shadow: 0 6px 16px rgba(255, 69, 58, 0.4);
 }
 
 /* =========================================
@@ -320,12 +294,20 @@ body {
 @media (max-width: 768px) {
   .video-grid-container {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
+    padding: 1rem;
+  }
+  
+  /* On mobile, tiles mimic the full screen card look */
+  .video-participant-container {
+    border-radius: 20px; 
   }
 
   .btn {
-    min-width: 100px;
-    font-size: 0.8rem;
+    min-width: auto; /* Allow buttons to shrink */
+    flex: 1; /* Stretch buttons evenly */
+    font-size: 0.85rem;
+    padding: 0 1rem;
   }
 }
 
@@ -341,11 +323,16 @@ body {
     transform: translate(-50%, -50%);
     color: var(--text-sub);
     z-index: 1;
+    font-size: 2rem; /* Made icon slightly larger */
+    opacity: 0.7;
 }
 
 .media-status-icons {
     margin-left: 8px;
     display: flex;
-    gap: 4px;
+    gap: 6px;
     align-items: center;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 6px;
 }
