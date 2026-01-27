@@ -2,6 +2,8 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--background-main);
+  /* Added relative positioning for children context */
+  position: relative;
 }
 
 .sidebar {
@@ -15,8 +17,11 @@
   flex-direction: column;
   transition: width 0.3s ease-in-out;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  
+  /* Essential for stacking context */
   position: relative;
   z-index: 1000;
+  flex-shrink: 0; /* Prevents sidebar from squishing */
 }
 
 .sidebar-open {
@@ -224,14 +229,35 @@
   display: none;
 }
 
+/* ------------------------------------------------ */
+/* FIXED SECTIONS BELOW TO RESOLVE CLICK ISSUES */
+/* ------------------------------------------------ */
+
 .main-content {
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
-  transition: margin-left 0.3s ease-in-out;
-  margin-left: 260px; /* Default margin for open sidebar */
+  /* Removed transition margin-left; Flexbox handles the animation naturally via 'flex-grow' */
+  
+  /* IMPORTANT: Removed margin-left. 
+     Since .app-layout is 'display: flex', the content sits next to sidebar automatically. 
+     Adding margin here pushes it too far away or causes overlap issues. */
+  /* margin-left: 260px; <-- REMOVED */
+
+  /* IMPORTANT: Added z-index and position relative.
+     This ensures the content area is its own "layer", preventing 
+     the Sidebar shadow from blocking clicks. */
+  position: relative; 
+  z-index: 1;
 }
 
 .main-content-shifted {
-  margin-left: 80px; /* Margin for closed sidebar */
+  /* margin-left: 80px; <-- REMOVED */
+}
+
+/* ADD THIS CLASS: Ensures the button is absolutely clickable */
+.btn-view-project {
+  position: relative;
+  z-index: 9999;
+  cursor: pointer;
 }
