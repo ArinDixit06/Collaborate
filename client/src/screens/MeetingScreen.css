@@ -1,11 +1,11 @@
 /* =========================================
-   FACETIME AESTHETIC + ACTIVE SPEAKER
+   FACETIME AESTHETIC + SMART GRID
    ========================================= */
 
 :root {
   /* iOS System Colors */
   --bg-main: #000000;
-  --bg-surface: rgba(28, 28, 30, 0.65); /* More transparent for glass effect */
+  --bg-surface: rgba(28, 28, 30, 0.65); /* Transparent for glass effect */
   
   /* Apple-style borders are barely visible */
   --glass: rgba(255, 255, 255, 0.1);
@@ -19,7 +19,7 @@
   --green: #30d158; /* iOS Green */
   --red: #ff453a;   /* iOS Red */
 
-  --radius-lg: 24px; /* Larger radius for that "Squircle" look */
+  --radius-lg: 24px; /* Squircle look */
   
   --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.8);
 }
@@ -83,49 +83,72 @@ body {
 }
 
 /* =========================================
-   VIDEO GRID
+   VIDEO GRID (SMART SCALING)
    ========================================= */
 
 .video-grid-container {
   flex: 1;
-  padding: 1.5rem; /* More breathing room like FaceTime */
+  width: 100%;
+  height: 100%;
+  padding: 2rem; 
+
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  grid-auto-rows: 1fr;
-  gap: 16px; /* Wider gaps */
-  place-items: stretch;
+  
+  /* SCALING MAGIC:
+     1. 'auto-fit': Fits as many columns as possible.
+     2. 'minmax(350px, 1fr)':
+        - If few people: They grow larger (1fr).
+        - If many people: They shrink down to 350px, then wrap to new row.
+  */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  
+  /* Centers the specific grid items vertically if they don't fill the screen */
+  align-content: center; 
+  justify-content: center;
+  
+  gap: 20px;
   overflow-y: auto;
 }
 
 /* =========================================
-   PARTICIPANT TILE
+   PARTICIPANT TILE (16:9 SHAPE)
    ========================================= */
 
 .video-participant-container {
   position: relative;
   width: 100%;
-  height: 100%;
-  /* Darker tile background */
-  background: #1c1c1e; 
+  
+  /* ASPECT RATIO: 
+     Forces the tile to stay 16:9 Widescreen.
+     Prevents "long vertical strips".
+  */
+  aspect-ratio: 16 / 9; 
+  
+  /* Prevents single user from stretching too wide on huge monitors */
+  max-width: 1400px;
+  margin: 0 auto; 
+
+  background: #1c1c1e;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  /* Removed default light border for a cleaner look */
-  border: 1px solid rgba(255, 255, 255, 0.0); 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  
+  /* Soft shadow for depth */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  
   display: flex;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* =========================================
-   VIDEO
+   VIDEO ELEMENT
    ========================================= */
 
 .video-participant-container video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* Ensures video fills the 16:9 box without stretching/skewing */
+  object-fit: cover; 
   background: #000;
-  /* Slight opacity on video to blend with dark theme until loaded */
   opacity: 0.98; 
 }
 
@@ -156,7 +179,6 @@ body {
    ACTIVE SPEAKER EFFECT
    ========================================= */
 
-/* Glow Border - Smoother transition */
 .video-participant-container.speaking {
   /* iOS Green Border */
   border: 2px solid var(--green);
@@ -169,7 +191,6 @@ body {
   animation: speakerPulse 2s infinite ease-in-out;
 }
 
-/* Wave Ring */
 .video-participant-container.speaking::after {
   content: "";
   position: absolute;
@@ -181,39 +202,23 @@ body {
   z-index: -1;
 }
 
-/* Smoother Pulse */
 @keyframes speakerPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(48, 209, 88, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(48, 209, 88, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0); }
 }
 
-/* Smoother Wave */
 @keyframes speakerWave {
-  0% {
-    opacity: 0.6;
-    transform: scale(1);
-    border-width: 2px;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.1);
-    border-width: 0px;
-  }
+  0% { opacity: 0.6; transform: scale(1); border-width: 2px; }
+  100% { opacity: 0; transform: scale(1.1); border-width: 0px; }
 }
 
 /* =========================================
-   CONTROLS
+   CONTROLS FOOTER
    ========================================= */
 
 .meeting-controls {
-  padding: 1.2rem 1rem; /* Taller footer */
+  padding: 1.2rem 1rem; 
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -222,7 +227,6 @@ body {
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  /* Added nice bottom spacing for larger screens */
   padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
 }
 
@@ -232,23 +236,16 @@ body {
 
 .btn {
   min-width: 120px;
-  height: 48px; /* Taller, more touch-friendly */
+  height: 48px; 
   padding: 0 1.5rem;
-  
   font-size: 0.9rem;
   font-weight: 600;
-  
   border-radius: 999px;
-  /* Remove border for cleaner look, use background only */
   border: none; 
-  
-  /* iOS Control Center Grey */
   background: rgba(255, 255, 255, 0.15); 
   color: white;
-  
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -263,55 +260,49 @@ body {
   transform: scale(0.96) translateY(0);
 }
 
-/* =========================================
-   PRIMARY ACTIONS
-   ========================================= */
-
-/* Default button is already styled above as neutral/secondary. 
-   If you have specific primary buttons, you can add a class, 
-   but keeping them neutral is very "Apple" */
-
-/* =========================================
-   LEAVE BUTTON
-   ========================================= */
-
 .btn-danger {
-  /* Solid Red like iOS End Call */
   background: var(--red);
   color: white;
   box-shadow: 0 4px 12px rgba(255, 69, 58, 0.3);
 }
 
 .btn-danger:hover {
-  background: #ff3b30; /* Brighter red on hover */
+  background: #ff3b30;
   box-shadow: 0 6px 16px rgba(255, 69, 58, 0.4);
 }
 
 /* =========================================
-   MOBILE
+   MOBILE RESPONSIVENESS
    ========================================= */
 
 @media (max-width: 768px) {
   .video-grid-container {
+    /* Stack vertically on mobile */
     grid-template-columns: 1fr;
+    /* Align to top on mobile so they scroll naturally */
+    align-content: start; 
     gap: 12px;
     padding: 1rem;
   }
   
-  /* On mobile, tiles mimic the full screen card look */
   .video-participant-container {
+    /* 4:3 Aspect ratio is usually better for mobile portrait screens */
+    aspect-ratio: 4 / 3; 
     border-radius: 20px; 
   }
 
   .btn {
-    min-width: auto; /* Allow buttons to shrink */
-    flex: 1; /* Stretch buttons evenly */
+    min-width: auto; 
+    flex: 1; 
     font-size: 0.85rem;
     padding: 0 1rem;
   }
 }
 
-/* Custom styles for video overlay and hidden video */
+/* =========================================
+   UTILITIES / ICONS
+   ========================================= */
+
 .hidden-video {
     display: none;
 }
@@ -323,7 +314,7 @@ body {
     transform: translate(-50%, -50%);
     color: var(--text-sub);
     z-index: 1;
-    font-size: 2rem; /* Made icon slightly larger */
+    font-size: 2.5rem; /* Larger icon */
     opacity: 0.7;
 }
 
