@@ -52,11 +52,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <span className="nav-text">Tasks</span>
           {!isSidebarOpen && <span className="tooltip">Tasks</span>}
         </NavLink>
-        <NavLink to="/profile" className={getNavLinkClass}>
-          <FaUser />
-          <span className="nav-text">Profile</span>
-          {!isSidebarOpen && <span className="tooltip">Profile</span>}
-        </NavLink>
         <NavLink to="/settings" className={getNavLinkClass}>
           <FaCog />
           <span className="nav-text">Settings</span>
@@ -66,14 +61,16 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
       {userInfo && (
         <div className="sidebar-footer">
-          {isSidebarOpen && (
-            <div className="user-profile">
-              <div className="user-avatar">
-                {userInfo.name.charAt(0).toUpperCase()}
-              </div>
-              <span className="user-name">{userInfo.name}</span>
+          <div
+            className="user-profile"
+            onClick={() => navigate('/profile')}
+            title="View Profile"
+          >
+            <div className="user-avatar">
+              {userInfo.name.charAt(0).toUpperCase()}
             </div>
-          )}
+            {isSidebarOpen && <span className="user-name">{userInfo.name}</span>}
+          </div>
           <button className="logout-button" onClick={logoutHandler}>
             <FaSignOutAlt />
             {isSidebarOpen && <span className="logout-text">Logout</span>}
