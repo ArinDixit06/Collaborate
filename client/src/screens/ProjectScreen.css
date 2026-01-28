@@ -35,14 +35,17 @@
    PROJECT GRID
 ===================================== */
 
+/* =====================================
+   PROJECT GRID
+===================================== */
+
 .modern-project-list {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(340px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fill,
+      minmax(340px, 1fr));
   gap: 2rem;
   margin-top: 2.5rem;
+  animation: slideInRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 /* =====================================
@@ -51,12 +54,13 @@
 
 .project-list-item {
   background: var(--background-secondary-cards);
+  backdrop-filter: var(--glass-morphism);
   border-radius: var(--radius-large);
   padding: 1.8rem;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border-color);
-  box-shadow: none;
+  border: var(--glass-border);
+  box-shadow: var(--shadow-subtle);
   transition: var(--transition-main);
   position: relative;
   overflow: hidden;
@@ -68,14 +72,13 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(
-      120deg,
+    linear-gradient(120deg,
       transparent,
-      rgba(10, 132, 255, 0.15),
-      transparent
-    );
+      rgba(46, 140, 251, 0.1),
+      transparent);
   opacity: 0;
   transition: var(--transition-main);
+  pointer-events: none;
 }
 
 .project-list-item:hover::before {
@@ -83,9 +86,9 @@
 }
 
 .project-list-item:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: var(--shadow-subtle);
-  border-color: rgba(10, 132, 255, 0.5);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(46, 140, 251, 0.3);
 }
 
 /* =====================================
@@ -110,6 +113,7 @@
 
 .project-name-link:hover {
   color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(46, 140, 251, 0.4);
 }
 
 /* =====================================
@@ -134,6 +138,12 @@
   font-size: 0.75rem;
   font-weight: 600;
   border: 1px solid var(--border-color);
+  transition: var(--transition-fast);
+}
+
+.metadata-capsule:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--text-secondary);
 }
 
 /* =====================================
@@ -150,13 +160,15 @@
   background: var(--background-tertiary-inputs);
   border-radius: var(--radius-pill);
   overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .progress-bar-fill {
   height: 100%;
-  background: var(--accent-color);
+  background: var(--accent-gradient);
   border-radius: inherit;
-  transition: width 0.4s ease;
+  transition: width 0.6s var(--transition-bounce);
+  box-shadow: 0 0 10px rgba(46, 140, 251, 0.5);
 }
 
 /* =====================================
@@ -193,6 +205,7 @@
   font-size: 0.85rem;
   border: 2px solid var(--background-secondary-cards);
   transition: var(--transition-main);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .member-avatar:not(:first-child),
@@ -201,8 +214,10 @@
 }
 
 .member-avatar:hover {
-  transform: scale(1.1);
+  transform: scale(1.15) translateY(-2px);
   z-index: 5;
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* =====================================
@@ -217,6 +232,7 @@
 /* View Button */
 .btn-view-project {
   background: var(--accent-color);
+  background: var(--accent-gradient);
   color: white;
   padding: 0.5rem 1.1rem;
   border-radius: var(--radius-pill);
@@ -224,12 +240,13 @@
   font-weight: 600;
   font-size: 0.85rem;
   transition: var(--transition-main);
-  box-shadow: var(--glow-accent);
+  box-shadow: var(--accent-glow);
 }
 
 .btn-view-project:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
+  box-shadow: 0 5px 15px rgba(46, 140, 251, 0.4);
 }
 
 /* Delete */
@@ -249,7 +266,7 @@
 
 .btn-delete-project:hover {
   background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
+  color: var(--danger-color);
 }
 
 .btn-delete-project svg {
@@ -258,17 +275,34 @@
 }
 
 .btn-delete-project:hover svg {
-  fill: #ef4444;
+  fill: var(--danger-color);
 }
 
 /* =====================================
    PROJECT HERO
 ===================================== */
 
-.project-hero-section {
-  max-width: 1100px;
+.project-hero-section,
+.project-hero-header {
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto 4rem;
-  padding: 3rem 1.5rem;
+  padding: 3rem 2rem;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.project-hero-title-and-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.project-detail-goal {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 800px;
+  line-height: 1.6;
 }
 
 .project-hero-actions {
@@ -276,16 +310,28 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .project-detail-title,
 .project-title-input {
-  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--text-primary);
-  background: transparent;
+  background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-title-input:focus {
+  border-bottom: 2px solid var(--accent-color);
+  -webkit-text-fill-color: var(--text-primary);
 }
 
 /* =====================================
@@ -293,23 +339,43 @@
 ===================================== */
 
 .project-description-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto 3rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+  background: var(--background-secondary-cards);
+  backdrop-filter: var(--glass-morphism);
+  border: var(--glass-border);
+  padding: 2rem;
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-subtle);
 }
 
 .project-description-column h3 {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-description-column h3::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
 }
 
 .project-description-text {
   color: var(--text-secondary);
-  line-height: 1.7;
+  line-height: 1.8;
+  font-size: 1.05rem;
 }
 
 /* =====================================
@@ -318,20 +384,21 @@
 
 .project-meta-footer {
   display: flex;
-  justify-content: center;
-  gap: 0.75rem;
+  justify-content: flex-end;
+  gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .project-meta-item {
-  background: var(--background-tertiary-inputs);
-  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.6rem 1.2rem;
   border-radius: var(--radius-pill);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
+  backdrop-filter: blur(5px);
 }
 
 /* =====================================
@@ -340,29 +407,76 @@
 
 .modern-task-list {
   background: var(--background-secondary-cards);
+  backdrop-filter: var(--glass-morphism);
   border-radius: var(--radius-large);
-  padding: 0.5rem 2rem;
-  box-shadow: none;
-  border: 1px solid var(--border-color);
+  padding: 1rem 2rem;
+  box-shadow: var(--shadow-subtle);
+  border: var(--glass-border);
   margin: 2rem 0;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Task Row */
 .task-list-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.2rem 0;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem;
   border-bottom: 1px solid var(--border-color);
   transition: var(--transition-main);
+  border-radius: var(--radius-small);
+  margin-bottom: 4px;
 }
 
 .task-list-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateX(6px);
 }
 
 .task-list-item:last-child {
   border-bottom: none;
+  margin-bottom: 0;
+}
+
+/* Animation Entry */
+/* Uses nth-child to stagger animations. Can go up to 20 items. */
+.task-list-item:nth-child(1) {
+  animation: fadeIn 0.4s ease forwards 0.1s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.task-list-item:nth-child(2) {
+  animation: fadeIn 0.4s ease forwards 0.2s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.task-list-item:nth-child(3) {
+  animation: fadeIn 0.4s ease forwards 0.3s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.task-list-item:nth-child(4) {
+  animation: fadeIn 0.4s ease forwards 0.4s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.task-list-item:nth-child(5) {
+  animation: fadeIn 0.4s ease forwards 0.5s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.task-list-item:nth-child(6) {
+  animation: fadeIn 0.4s ease forwards 0.6s;
+  opacity: 0;
+  animation-fill-mode: forwards;
 }
 
 /* =====================================
@@ -370,20 +484,27 @@
 ===================================== */
 
 .task-checkbox {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 2px solid var(--border-color);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition-main);
+  transition: var(--transition-bounce);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.task-checkbox:hover {
+  border-color: var(--accent-color);
 }
 
 .task-checkbox.checked {
   background: var(--accent-color);
   border-color: var(--accent-color);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(46, 140, 251, 0.6);
 }
 
 .task-checkbox.checked svg {
@@ -401,17 +522,20 @@
 
 .task-name {
   font-weight: 600;
+  font-size: 1.05rem;
   color: var(--text-primary);
+  transition: var(--transition-fast);
 }
 
 .task-name.completed {
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   text-decoration: line-through;
+  opacity: 0.7;
 }
 
 .task-description {
-  margin-top: 0.25rem;
-  font-size: 0.85rem;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
 }
 
@@ -420,30 +544,37 @@
 ===================================== */
 
 .task-status-pill {
-  padding: 0.25rem 0.7rem;
+  padding: 0.4rem 0.9rem;
   border-radius: var(--radius-pill);
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .task-status-pill.completed {
   background: var(--status-completed-bg);
   color: var(--status-completed-text);
+  border: 1px solid rgba(50, 215, 75, 0.2);
 }
 
 .task-status-pill.pending {
   background: var(--status-pending-bg);
   color: var(--status-pending-text);
+  border: 1px solid rgba(161, 161, 170, 0.2);
 }
 
 .task-status-pill.inprogress {
   background: var(--status-inprogress-bg);
   color: var(--status-inprogress-text);
+  border: 1px solid rgba(10, 132, 255, 0.2);
 }
 
 .task-status-pill.blocked {
   background: var(--status-blocked-bg);
   color: var(--status-blocked-text);
+  border: 1px solid rgba(255, 69, 58, 0.2);
 }
 
 /* =====================================
@@ -452,32 +583,34 @@
 .project-header-action-group {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .project-header-action-group .task-action-btn {
-  width: 42px;
-  height: 42px;
-  background-color: var(--background-tertiary-inputs);
+  width: 44px;
+  height: 44px;
+  background-color: var(--background-secondary-cards);
   border: 1px solid var(--border-color);
-  box-shadow: none;
+  box-shadow: var(--shadow-subtle);
   margin-left: 0;
 }
 
 .project-header-action-group .task-action-btn:hover {
-  background-color: var(--background-secondary-cards);
-  transform: translateY(-2px);
+  background-color: var(--accent-color);
+  transform: translateY(-3px);
   border-color: var(--accent-color);
+  box-shadow: var(--accent-glow);
 }
 
 .project-header-action-group .task-action-btn svg {
   fill: var(--text-secondary);
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
 }
 
 .project-header-action-group .task-action-btn:hover svg {
-  fill: var(--accent-color);
+  fill: white;
 }
 
 /* =====================================
@@ -485,30 +618,31 @@
 ===================================== */
 
 .task-action-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background-color: var(--background-tertiary-inputs); 
+  background-color: transparent;
   border: 1px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  margin-left: 0.5rem;
+  margin-left: 0.75rem;
   transition: all 0.2s ease;
 }
 
 .task-action-btn svg {
   fill: var(--text-secondary);
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   transition: fill 0.2s ease;
 }
 
 .task-action-btn:hover {
-  background-color: var(--background-secondary-cards);
-  transform: translateY(-1px);
+  background-color: var(--background-tertiary-inputs);
+  transform: scale(1.1);
+  border-color: var(--border-color);
 }
 
 .task-action-btn:hover svg {
@@ -525,11 +659,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 42px;
+  height: 44px;
   border-radius: var(--radius-pill);
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   border: 1px solid var(--border-color);
   background: transparent;
   color: var(--text-primary);
@@ -539,9 +673,10 @@
 }
 
 .btn-outline-secondary:hover {
-  background: var(--background-tertiary-inputs);
+  background: rgba(255, 255, 255, 0.05);
   border-color: var(--accent-color);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  color: white;
 }
 
 /* Add Task */
@@ -550,22 +685,23 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 42px;
-  background: var(--accent-color);
+  height: 44px;
+  background: var(--accent-gradient);
   color: white !important;
   border-radius: var(--radius-pill);
-  padding: 0 1.5rem;
+  padding: 0 1.75rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   border: none;
   cursor: pointer;
-  box-shadow: var(--glow-accent);
+  box-shadow: var(--accent-glow);
   transition: var(--transition-main);
 }
 
 .btn-gradient:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
   filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(46, 140, 251, 0.5);
 }
 
 /* =====================================
@@ -575,6 +711,7 @@
 @media (max-width: 768px) {
   .project-description-container {
     grid-template-columns: 1fr;
+    padding: 1.5rem;
   }
 
   .project-footer {
@@ -583,18 +720,27 @@
   }
 
   .modern-task-list {
-    padding: 1rem 1.2rem;
+    padding: 1rem 1rem;
   }
-  
+
   .project-hero-actions {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 1.5rem;
   }
-  
+
   .project-header-action-group {
     width: 100%;
     justify-content: flex-start;
     flex-wrap: wrap;
+  }
+
+  .task-list-item {
+    flex-wrap: wrap;
+  }
+
+  .task-details-main {
+    width: 100%;
+    margin-bottom: 0.5rem;
   }
 }
