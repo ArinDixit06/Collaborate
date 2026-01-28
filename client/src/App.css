@@ -23,6 +23,8 @@
 }
 
 .auth-page-wrapper {
+  flex: 1;
+  /* Force it to fill the flex container */
   width: 100%;
   margin: 0;
   padding: 0;
